@@ -1,0 +1,21 @@
+Metadata-Version: 1.1
+Name: pydmpc
+Version: 0.1.0
+Summary: A Python tool for distributed model-based predictive control of energy suppy chains
+Home-page: https://github.com/RWTH-EBC/pyDMPC
+Author: RWTH Aachen University, E.ON Energy Research Center, Institute of Energy Efficient Buildings and Indoor Climate
+Author-email: post_ebc@eonerc.rwth-aachen.de
+License: MIT
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: License :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Software Development :: Code Generators
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Utilities

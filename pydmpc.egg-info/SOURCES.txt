@@ -1,0 +1,16 @@
+README.md
+pyDMPC/_init_.py
+pyDMPC/ControlFramework/Init.py
+pyDMPC/ControlFramework/Objective_Function.py
+pyDMPC/ControlFramework/Subsystem.py
+pyDMPC/ControlFramework/System.py
+pyDMPC/ControlFramework/_init_.py
+pyDMPC/ControlFramework/test_main.py
+pyDMPC/ControlFramework/algorithm/BExMoC.py
+pyDMPC/ControlFramework/algorithm/NC_DMPC.py
+pyDMPC/ControlFramework/algorithm/_init_.py
+pydmpc.egg-info/PKG-INFO
+pydmpc.egg-info/SOURCES.txt
+pydmpc.egg-info/dependency_links.txt
+pydmpc.egg-info/requires.txt
+pydmpc.egg-info/top_level.txt

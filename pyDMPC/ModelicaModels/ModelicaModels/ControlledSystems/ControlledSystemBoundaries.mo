@@ -1,7 +1,8 @@
 within ModelicaModels.ControlledSystems;
 model ControlledSystemBoundaries
   "Version of controlled system with boundary conditions"
-  extends ModelicaModels.BaseClasses.ControlledSystemBaseClass(volumeFlow(
+  extends ModelicaModels.BaseClasses.AHU.ControlledSystemBaseClass(
+                                                               volumeFlow(
         tableOnFile=false, table=[0,0.31,0.29]));
   Modelica.Blocks.Sources.Sine     outdoorTemperature(
     amplitude=10,
