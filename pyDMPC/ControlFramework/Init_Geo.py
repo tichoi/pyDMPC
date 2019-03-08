@@ -1,20 +1,21 @@
 """ Neccessary specifications (user) """
 
 """System configuration"""
-name_system = 'Geothermal Field'
+name_system = 'Geo'
 amount_consumer = 1
 amount_generator = 1
 
 """Data point IDs in the controlled system"""
-measurements_IDs = ['vol1.heatPort.T','vol1.heatPort.Q_flow','vol.heatPort.T','vol.heatPort.Q_flow','fan.m_flow','fan.port_b.show_T','hydraulicResistance.port_b.show_T']
+measurements_IDs = ['fieldTemperature', 'buidlingTemperature','buildingNeed',
+                    'fieldMassflow_out', 'buildingMassflow_out']
 
 """ General algorithm settings """
-algorithm = 'NC_DMPC'   #choices: 'NC_DMPC', 'BExMoC'
+algorithm = 'BExMoC'   #choices: 'NC_DMPC', 'BExMoC'
 parallelization = False  #run calculations in parallel if possible
 realtime = False         #Choose True for a real-life experiment
 
 """ Settings for BExMoC algorithm """
-# So far: For all subsystems the same settings☻
+# So far: For all subsystems the same settings
 factors_BCs = [1.5, 0.03]              # order: BC1, BC2, ...
 center_vals_BCs = [30, 0.001]
 amount_lower_vals = [9, 0]
@@ -43,22 +44,25 @@ prediction_horizon = 3600        #Common prediction horizon in seconds
 
 """ Directories and Modelica libraries """
 # Path where the main working directory shall be created
-path_res = r'C:\mst\Dymola'
+path_res = r'C:\mst\dymola'
 
 # Name of the main working directory
-name_wkdir = r'pyDMPC_wkdir389'
+import time
+timestr = time.strftime("%Y%m%d_%H%M%S")
+name_wkdir = r'pyDMPC_' + 'wkdir' + timestr
+
 # Path to the Modelica libraries to be loaded
 path_lib1 = r'C:\mst\pyDMPC\pyDMPC\ModelicaModels\ModelicaModels'
 path_lib2 = r'C:\mst\modelica-buildings\Buildings'
-path_lib3 = r'C:\mst\AixLib'
+path_lib3 = r'C:\mst\AixLib\Aixlib'
 path_lib = [path_lib1, path_lib2, path_lib3]
 
 create_FMU = False
 # Modelica model to be used as controlled system in a FMU
-path_fmu = r'ModelicaModels.ControlledSystems.ControlledSystemBoundaries'
+path_fmu = r'ModelicaModels.ControlledSystems.SimpleModelGeo'
 
 # Name of the FMU file to be created
-name_fmu = 'pyDMPCFMU'
+name_fmu = 'pyDMPCFMU_Geo'
 
 # Path to the *.egg file containing the Python-Dymola-Interface
 path_dymola = r'C:\Program Files (x86)\Dymola 2018\Modelica\Library\python_interface\dymola.egg'
@@ -75,6 +79,7 @@ incr = 10
 
 # Tolerance for the Modelica solver
 tol = 0.0001
+
 
 # Initial conditions for the optimization
 init_conds = [50]
@@ -94,7 +99,7 @@ init_DecVars_global = 0
 num_BCs_global = 2
 num_VarsOut_global = 2
 bounds_DVs_global = None
-names_BCs_global = names_SPs = ['temperature', 'm_flow']
+names_BCs_global = names_SPs = ['temperature', 'massflow']
 output_vars_global = None
 amount_subsystems = 2
 
@@ -117,77 +122,32 @@ cost_par = [] #for MassFlowRate
 IDs_inputs = []
 
 """ Subsystems """
-# Geothermal Field
-name.append('vol')
+# Ground
+name.append('Geothermal_Field')
 position.append(2)
 type_subSyst.append('generator')
-num_DecVars.append(1)
+num_DecVars.append(0)
 num_VarsOut.append(2)
-bounds_DVs.append([10,100])
-model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.MixingVolume')
-names_DVs.append('Building_demand')
-output_vars.append("vol1.ports[2].m_flow","vol1.ports[2].h_outflow")
-initial_names.append(["hex.ele[1].mas.T","hex.ele[2].mas.T","hex.ele[3].mas.T","hex.ele[4].mas.T"])
-IDs_initial_values.append(["inOutletsOutgoingHexele1masT","inOutletsOutgoingHexele2masT","inOutletsOutgoingHexele3masT","inOutletsOutgoingHexele4masT"])
-IDs_inputs.append(['outdoorHumidityOutput','outdoorTemperatureOutput','roomHumidityOutput','roomTemperatureOutput'])
-cost_par.append(None)
+bounds_DVs.append([0,0])
+model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field')
+names_DVs.append(None)
+output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
+initial_names.append([])
+IDs_initial_values.append([])
+IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])
+cost_par.append("decisionVariables.y[1]")
 
 # Building
-name.append('vol1')
+name.append('Building')
 position.append(1)
-type_subSyst.append('distributor')
+type_subSyst.append('consumer')
 num_DecVars.append(1)
 num_VarsOut.append(2)
 bounds_DVs.append([0,100])
-model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.MixingVolume')
-names_DVs.append('valvePreHeater')
-output_vars.append(["supplyAirTemperature.T","supplyAirHumidity.phi"])
-initial_names.append(["hex.ele[1].mas.T","hex.ele[2].mas.T","hex.ele[3].mas.T","hex.ele[4].mas.T"])
-IDs_initial_values.append(["preHeaterhexele1masT","preHeaterhexele2masT","preHeaterhexele3masT","preHeaterhexele4masT"])
-IDs_inputs.append(["hRCHumidityOutput","hRCTemperatureCOutput"])
-cost_par.append('val.port_1.m_flow')
-
-## Cooler
-#name.append('Cooler')
-#position.append(3)
-#type_subSyst.append('distributor')
-#num_DecVars.append(1)
-#num_VarsOut.append(2)
-#bounds_DVs.append([0,100])
-#model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Cooler')
-#names_DVs.append('valveCooler')
-#output_vars.append(["supplyAirTemperature.T","supplyAirHumidity.phi"])
-#initial_names.append(["hex.ele[1].mas.T","hex.ele[2].mas.T","hex.ele[3].mas.T","hex.ele[4].mas.T"])
-#IDs_initial_values.append(["coolerhexele1masT","coolerhexele2masT","coolerhexele3masT","coolerhexele4masT"])
-#IDs_inputs.append(["preHeaterHumidityOutput","preHeaterTemperatureCOutput"])
-#cost_par.append('CoolerValve.port_b.m_flow')
-#
-## Heater
-#name.append('Heater')
-#position.append(2)
-#type_subSyst.append('distributor')
-#num_DecVars.append(1)
-#num_VarsOut.append(2)
-#bounds_DVs.append([0,100])
-#model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Heater')
-#names_DVs.append('valveHeater')
-#output_vars.append(["supplyAirTemperature.T","supplyAirHumidity.phi"])
-#initial_names.append(["hex.ele[1].mas.T","hex.ele[2].mas.T","hex.ele[3].mas.T","hex.ele[4].mas.T"])
-#IDs_initial_values.append(["heaterhexele1masT","heaterhexele2masT","heaterhexele3masT","heaterhexele4masT"])
-#IDs_inputs.append(["coolerHumidityOutput","coolerTemperatureCOutput"])
-#cost_par.append('val.port_1.m_flow')
-#
-## Steam_humidifier
-#name.append('Steam_humidifier')
-#position.append(1)
-#type_subSyst.append('consumer')
-#num_DecVars.append(1)
-#num_VarsOut.append(2)
-#bounds_DVs.append([0,0])
-#model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Humidifier')
-#names_DVs.append('humidifierWSP1')
-#output_vars.append(["supplyAirTemperature.T","supplyAirHumidity.phi"])
-#initial_names.append(None)
-#IDs_initial_values.append(None)
-#IDs_inputs.append(["heaterHumidityOutput","heaterTemperatureCOutput"])
-#cost_par.append('product3.y')
+model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Building')
+names_DVs.append('valveQflow')
+output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
+initial_names.append([])
+IDs_initial_values.append([])
+IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
+cost_par.append("decisionVariables.y[1]")

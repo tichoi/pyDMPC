@@ -2,13 +2,14 @@ within ModelicaModels.SubsystemModels.DetailedModels.AHU;
 model Humidifier "Detailed model of the humidifier"
 
   extends
-    ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerCommunicationBaseClass(
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerCommunicationBaseClass(
     Pressure(k=system.p_ambient),
     IntakeAirSource(nPorts=1),
     IntakeAirSink(nPorts=1),
     volumeFlow(tableOnFile=false, table=[0,0.31,0.29]));
 
-  extends ModelicaModels.Subsystems.BaseClasses.HumidifierBaseClass(vol(nPorts=
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HumidifierBaseClass(
+                                                                    vol(nPorts=
           5), SteamSource(nPorts=1));
 equation
   connect(vol.ports[1], IntakeAirSource.ports[1]) annotation (Line(points={{-50,22},

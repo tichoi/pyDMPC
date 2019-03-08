@@ -1,13 +1,11 @@
-within ModelicaModels.Subsystems.BaseClasses;
+within ModelicaModels.Subsystems.BaseClasses.AHU;
 model HeaterBaseClass "Base class of the heater"
-  extends
-    ModelicaModels.Subsystems.BaseClasses.HeatExchangerBaseClass(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerBaseClass(
     ValveCharacteristicCurve(
     tableOnFile=false,
     table=[0,0; 0.1,0.1; 0.9,0.9; 1,1]),
     warmWaterSource(nPorts=1),
     waterSink(nPorts=1));
-
 
   AixLib.Fluid.Actuators.Valves.ThreeWayLinear    val(
     redeclare package Medium = MediumWater,

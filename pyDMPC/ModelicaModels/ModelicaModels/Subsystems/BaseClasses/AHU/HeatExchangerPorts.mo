@@ -1,10 +1,8 @@
-within ModelicaModels.Subsystems.BaseClasses;
-model HeatExchangerPorts
-  "Base class for the heat exchanger subsystems"
+within ModelicaModels.Subsystems.BaseClasses.AHU;
+model HeatExchangerPorts "Base class for the heat exchanger subsystems"
 
   replaceable package MediumAir = AixLib.Media.Air;
   replaceable package MediumWater = AixLib.Media.Water;
-
 
   Modelica.Fluid.Interfaces.FluidPort_a portSupplyAirIn(redeclare package
       Medium =

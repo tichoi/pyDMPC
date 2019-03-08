@@ -1,6 +1,4 @@
 BaseClasses
-Heater
-Cooler
-HeatRecovery
-Humidifier
+AHU
+Geo
 DetailedModels

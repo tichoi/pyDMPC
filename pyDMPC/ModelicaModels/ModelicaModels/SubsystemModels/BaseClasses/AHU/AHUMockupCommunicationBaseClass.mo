@@ -1,4 +1,4 @@
-within ModelicaModels.SubsystemModels.BaseClasses;
+within ModelicaModels.SubsystemModels.BaseClasses.AHU;
 model AHUMockupCommunicationBaseClass
   "Base class containing the communication blocks for all the mockup models"
   import ModelicaModels;

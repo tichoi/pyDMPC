@@ -1,9 +1,9 @@
 within ModelicaModels.Subsystems.AHU;
 model Cooler "Subsystem of the cooler"
 
-  extends ModelicaModels.Subsystems.BaseClasses.CoolerBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.CoolerBaseClass;
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerPorts(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerPorts(
   portSupplyAirIn(redeclare package Medium = MediumAir),
   portSupplyAirOut(redeclare package Medium = MediumAir));
 

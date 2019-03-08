@@ -1,7 +1,6 @@
-within ModelicaModels.Subsystems.BaseClasses;
+within ModelicaModels.Subsystems.BaseClasses.AHU;
 model CoolerBaseClass "Base class of the cooler"
-  extends
-    ModelicaModels.Subsystems.BaseClasses.HeatExchangerBaseClass(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerBaseClass(
     warmWaterSource(p=waterSink.p + Pressure1.k, nPorts=1),
     ValveCharacteristicCurve(tableOnFile=false, table=[0,0; 1.0,1.0]),
     waterSink(nPorts=1),

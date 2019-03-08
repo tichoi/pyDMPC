@@ -2,13 +2,13 @@ within ModelicaModels.SubsystemModels.DetailedModels.AHU;
 model Cooler "Detailed model of the cooler"
 
   extends
-    ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerCommunicationBaseClass(
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerCommunicationBaseClass(
      Pressure(k=defaultPressure),
     IntakeAirSource(nPorts=1),
     IntakeAirSink(nPorts=1),
     volumeFlow(tableOnFile=false, table=[0,0.31,0.29]));
 
-  extends ModelicaModels.Subsystems.BaseClasses.CoolerBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.CoolerBaseClass;
 equation
   connect(IntakeAirSource.ports[1], hex.port_a2)
     annotation (Line(points={{-100,12},{-56,12},{-56,70},{-12,70}},

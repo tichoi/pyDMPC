@@ -1,4 +1,4 @@
-within ModelicaModels.Subsystems.BaseClasses;
+within ModelicaModels.Subsystems.BaseClasses.AHU;
 model HumidifierBaseClass "Base class of the humdifier"
 
   replaceable package MediumAir =

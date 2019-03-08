@@ -1,6 +1,6 @@
 within ModelicaModels.Subsystems.AHU;
 model Humidifier "Subsystem of the humdifier"
-  extends ModelicaModels.Subsystems.BaseClasses.HumidifierBaseClass(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HumidifierBaseClass(
       vol(nPorts=3), SteamSource(nPorts=1));
   Modelica.Fluid.Interfaces.FluidPort_a portSupplyAirIn(redeclare package
       Medium =         MediumAir) "Inlet port of supply air"

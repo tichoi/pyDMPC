@@ -1,9 +1,9 @@
 within ModelicaModels.Subsystems.AHU;
 model PreHeater "Model of the pre-heater"
 
-  extends ModelicaModels.Subsystems.BaseClasses.PreHeaterBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.PreHeaterBaseClass;
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerPorts(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerPorts(
   portSupplyAirIn(redeclare package Medium = MediumAir),
   portSupplyAirOut(redeclare package Medium = MediumAir));
 

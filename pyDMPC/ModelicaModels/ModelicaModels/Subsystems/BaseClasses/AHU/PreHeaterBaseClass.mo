@@ -1,6 +1,6 @@
-within ModelicaModels.Subsystems.BaseClasses;
+within ModelicaModels.Subsystems.BaseClasses.AHU;
 model PreHeaterBaseClass "Base class of the pre-heater"
-  extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerBaseClass(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerBaseClass(
     warmWaterSource(nPorts=1),
     ValveCharacteristicCurve(tableOnFile=false, table=[0,0; 1.0,1.0]),
     waterSink(nPorts=1));

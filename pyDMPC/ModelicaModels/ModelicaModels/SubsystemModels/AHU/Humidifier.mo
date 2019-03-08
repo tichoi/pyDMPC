@@ -1,7 +1,8 @@
-within ModelicaModels.SubsystemModels;
+within ModelicaModels.SubsystemModels.AHU;
 model Humidifier "Mockup model of the humidifier "
 
-  extends ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerMockupCommunicationBaseClass(
+  extends
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerMockupCommunicationBaseClass(
       gainTemperature(k=0));
 equation
 

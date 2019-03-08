@@ -1,10 +1,8 @@
-within ModelicaModels.Subsystems.BaseClasses;
-model HeatExchangerBaseClass
-  "Base class for the heat exchanger subsystems"
+within ModelicaModels.Subsystems.BaseClasses.AHU;
+model HeatExchangerBaseClass "Base class for the heat exchanger subsystems"
 
   replaceable package MediumAir = AixLib.Media.Air;
   replaceable package MediumWater = AixLib.Media.Water;
-
 
   parameter Modelica.SIunits.Pressure defaultPressure = 101300 "Default pressure";
 

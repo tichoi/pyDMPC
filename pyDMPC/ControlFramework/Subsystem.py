@@ -86,7 +86,7 @@ class Subsystem():
         self.measurements = [self.measurements[0], self.measurements[1]]
 
         # Get a dedicated outdoor measurement
-        outdoor_meas = self.GetMeasurements([r'outdoorTemperatureOutput'], model)
+        #outdoor_meas = self.GetMeasurements([r'outdoorTemperatureOutput'], model)
 
         if self._IDs_initial_values is not None:
             self._initial_values = self.GetMeasurements(self._IDs_initial_values, model)

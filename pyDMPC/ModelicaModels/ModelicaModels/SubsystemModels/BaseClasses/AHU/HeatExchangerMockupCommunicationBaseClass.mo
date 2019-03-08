@@ -1,10 +1,9 @@
-within ModelicaModels.SubsystemModels.BaseClasses;
+within ModelicaModels.SubsystemModels.BaseClasses.AHU;
 model HeatExchangerMockupCommunicationBaseClass
   "Base class containing the communication blocks for the heat exchanger mockup models"
 
-  extends ModelicaModels.SubsystemModels.BaseClasses.AHUMockupCommunicationBaseClass;
-
-
+  extends
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.AHUMockupCommunicationBaseClass;
 
   Modelica.Blocks.Math.Gain gainTemperature(k=0.1)
     "Temperature gain to transform the decision variable into temperature difference"

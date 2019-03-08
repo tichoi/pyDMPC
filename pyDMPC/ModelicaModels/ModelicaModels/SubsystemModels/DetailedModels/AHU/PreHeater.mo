@@ -2,13 +2,13 @@ within ModelicaModels.SubsystemModels.DetailedModels.AHU;
 model PreHeater "Detailed model of the pre heater"
 
   extends
-    ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerCommunicationBaseClass(
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerCommunicationBaseClass(
      Pressure(k=defaultPressure),
     IntakeAirSource(nPorts=1),
     IntakeAirSink(nPorts=1),
     volumeFlow(tableOnFile=false, table=[0,0.31,0.29]));
 
-  extends ModelicaModels.Subsystems.BaseClasses.PreHeaterBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.PreHeaterBaseClass;
 
   Modelica.Blocks.Sources.Constant Temperature(k=273 + 50) annotation (
       Placement(transformation(

@@ -1,9 +1,9 @@
 within ModelicaModels.Subsystems.AHU;
 model Heater "Heater subsystem"
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeaterBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeaterBaseClass;
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerPorts;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerPorts;
 
 equation
   connect(portSupplyAirIn, hex.port_a2) annotation (Line(points={{-100,0},{-84,

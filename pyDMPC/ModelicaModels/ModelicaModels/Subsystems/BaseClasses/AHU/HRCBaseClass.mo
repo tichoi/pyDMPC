@@ -1,8 +1,7 @@
-within ModelicaModels.Subsystems.BaseClasses;
-model HRCBaseClass
-  "Subsystem model including dampers and heat recovery system"
+within ModelicaModels.Subsystems.BaseClasses.AHU;
+model HRCBaseClass "Subsystem model including dampers and heat recovery system"
 
-extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerBaseClass(
+extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerBaseClass(
       ValveCharacteristicCurve(table=[0.0,0.0; 1,1]));
 
 parameter Modelica.SIunits.MassFlowRate mFlowNomOut=1
@@ -16,7 +15,6 @@ parameter String resultFileName2 = "HumResult.txt";
 parameter String header = "Objective function value" "Header for result file";
 
 parameter Modelica.SIunits.Pressure defaultPressure = 101300 "Default pressure";
-
 
   Buildings.Fluid.HeatExchangers.WetCoilCounterFlow IntakeHex(
     redeclare package Medium2 = MediumAir,
@@ -76,8 +74,7 @@ equation
   connect(ValveCharacteristicCurve.y[1], val.y) annotation (Line(points={{-59,
           -50},{-34,-50},{-34,6},{-24,6}}, color={0,0,127}));
   connect(Pressure1.y, CurculationPump.dp_in) annotation (Line(points={{-59,-10},
-          {32,-10},{32,-23.8},{20,-23.8}},
-                                       color={0,0,127}));
+          {32,-10},{32,-24},{20,-24}}, color={0,0,127}));
   connect(senTemp1.port, CurculationPump.port_b)
     annotation (Line(points={{10,-64},{8,-64},{8,-34}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-660,-500},

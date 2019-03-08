@@ -34,8 +34,8 @@ model ControlledSystemBaseClass "Base class of the controlled system"
   AixLib.Fluid.Sensors.Temperature supplyAirTemperature(redeclare package
       Medium = MediumAir) "Temperature of supply air"
     annotation (Placement(transformation(extent={{278,20},{298,40}})));
-  AixLib.Fluid.Sensors.RelativeHumidity supplyHumidity(redeclare package Medium
-      =        MediumAir) "Relative humidity of supply air"
+  AixLib.Fluid.Sensors.RelativeHumidity supplyHumidity(redeclare package Medium =
+               MediumAir) "Relative humidity of supply air"
     annotation (Placement(transformation(extent={{250,20},{270,40}})));
   Modelica.Fluid.Sources.Boundary_pT  exhaustAirSink(
     redeclare package Medium = MediumAir,
@@ -131,17 +131,17 @@ model ControlledSystemBaseClass "Base class of the controlled system"
         extent={{10,10},{-10,-10}},
         rotation=180,
         origin={-350,-96})));
-  AixLib.Fluid.Sensors.Temperature heaterTemperature(redeclare package Medium
-      =        MediumAir) "Temperature after heater"
+  AixLib.Fluid.Sensors.Temperature heaterTemperature(redeclare package Medium =
+               MediumAir) "Temperature after heater"
     annotation (Placement(transformation(extent={{144,22},{164,42}})));
-  AixLib.Fluid.Sensors.RelativeHumidity heaterHumidity(redeclare package Medium
-      =        MediumAir) "Relative humidity after heater"
+  AixLib.Fluid.Sensors.RelativeHumidity heaterHumidity(redeclare package Medium =
+               MediumAir) "Relative humidity after heater"
     annotation (Placement(transformation(extent={{118,24},{138,44}})));
-  AixLib.Fluid.Sensors.RelativeHumidity coolerHumidity(redeclare package Medium
-      =        MediumAir) "Relative humidity after cooler"
+  AixLib.Fluid.Sensors.RelativeHumidity coolerHumidity(redeclare package Medium =
+               MediumAir) "Relative humidity after cooler"
     annotation (Placement(transformation(extent={{38,24},{58,44}})));
-  AixLib.Fluid.Sensors.Temperature coolerTemperature(redeclare package Medium
-      =        MediumAir) "Temperature after cooler"
+  AixLib.Fluid.Sensors.Temperature coolerTemperature(redeclare package Medium =
+               MediumAir) "Temperature after cooler"
     annotation (Placement(transformation(extent={{62,22},{82,42}})));
   AixLib.Fluid.Sensors.RelativeHumidity preHeaterHumidity(redeclare package
       Medium = MediumAir) "Relative humidity after pre-heater"

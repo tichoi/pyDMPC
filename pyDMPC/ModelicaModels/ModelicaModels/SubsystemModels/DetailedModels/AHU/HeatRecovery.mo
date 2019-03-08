@@ -2,14 +2,14 @@ within ModelicaModels.SubsystemModels.DetailedModels.AHU;
 model HeatRecovery "Detailed model of heat recovery system"
 
   extends
-    ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerCommunicationBaseClass(
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerCommunicationBaseClass(
      Pressure(k=system.p_ambient),
     IntakeAirSink(nPorts=1),
     volumeFlow(tableOnFile=false, table=[0,0.31,0.29]),
     MeasuredData(columns=2:5),
     IntakeAirSource(nPorts=1));
 
-  extends ModelicaModels.Subsystems.BaseClasses.HRCBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HRCBaseClass;
   Modelica.Fluid.Sources.MassFlowSource_T extractAirSource(
     m_flow=0.5,
     redeclare package Medium = MediumAir,

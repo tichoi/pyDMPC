@@ -1,4 +1,4 @@
-within ModelicaModels.SubsystemModels.BaseClasses;
+within ModelicaModels.SubsystemModels.BaseClasses.AHU;
 model TemperatureSensor "Mockup of a temperature sensor"
   extends Modelica.Blocks.Math.Add3;
   Modelica.Blocks.Interfaces.RealOutput T "Connector of Real output signals"

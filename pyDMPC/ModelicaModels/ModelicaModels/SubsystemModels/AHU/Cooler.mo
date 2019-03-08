@@ -1,6 +1,7 @@
-within ModelicaModels.SubsystemModels;
+within ModelicaModels.SubsystemModels.AHU;
 model Cooler "Mockup model of the cooler"
-  extends BaseClasses.HeatExchangerMockupCommunicationBaseClass(gainTemperature(
+  extends BaseClasses.AHU.HeatExchangerMockupCommunicationBaseClass(
+                                                                gainTemperature(
         k=-0.1), gainHumidity(k=-0.01));
   annotation (Icon(graphics={Line(points={{-140,60},{-100,-20},{-40,-80},{18,
               -100},{98,-100},{98,-100}},

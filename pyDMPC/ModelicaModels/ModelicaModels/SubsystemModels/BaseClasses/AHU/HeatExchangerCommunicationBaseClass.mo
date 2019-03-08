@@ -1,4 +1,4 @@
-within ModelicaModels.SubsystemModels.BaseClasses;
+within ModelicaModels.SubsystemModels.BaseClasses.AHU;
 model HeatExchangerCommunicationBaseClass
   "Base class containing the communication blocks for the heat exchanger models"
 
@@ -95,7 +95,6 @@ model HeatExchangerCommunicationBaseClass
         rotation=180,
         origin={186,48})));
 
-
   Modelica.Blocks.Math.Gain convertPercent(k=1/100) "Convert from percent"
     annotation (Placement(transformation(
         extent={{-6,-6},{6,6}},
@@ -104,8 +103,6 @@ model HeatExchangerCommunicationBaseClass
   AixLib.Utilities.Psychrometrics.ToTotalAir toTotAir
     annotation (Placement(transformation(extent={{-200,-20},{-180,0}})));
 equation
-
-
 
   connect(VolumeToMassFlowIntake.y, IntakeAirSource.m_flow_in) annotation (
       Line(points={{-141,90},{-150,90},{-150,20},{-120,20}}, color={0,0,127}));

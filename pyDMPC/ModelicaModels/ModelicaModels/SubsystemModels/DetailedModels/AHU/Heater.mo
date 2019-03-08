@@ -1,13 +1,13 @@
 within ModelicaModels.SubsystemModels.DetailedModels.AHU;
 model Heater "Subsystem model of the heater"
   extends
-    ModelicaModels.SubsystemModels.BaseClasses.HeatExchangerCommunicationBaseClass(
+    ModelicaModels.SubsystemModels.BaseClasses.AHU.HeatExchangerCommunicationBaseClass(
      Pressure(k=defaultPressure),
     IntakeAirSource(nPorts=1),
     IntakeAirSink(nPorts=1),
     volumeFlow(tableOnFile=false, table=[0,0.31,0.29]));
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeaterBaseClass;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeaterBaseClass;
 
 equation
   connect(hex.port_b2, supplyAirTemperature.port)

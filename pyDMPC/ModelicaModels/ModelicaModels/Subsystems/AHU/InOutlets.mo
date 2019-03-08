@@ -1,9 +1,9 @@
 within ModelicaModels.Subsystems.AHU;
 model InOutlets "Subsystem model including dampers and heat recovery system"
-  extends ModelicaModels.Subsystems.BaseClasses.HRCBaseClass(
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HRCBaseClass(
       ValveCharacteristicCurve(table=[0.0,0.0; 1.0,1.0]));
 
-  extends ModelicaModels.Subsystems.BaseClasses.HeatExchangerPorts;
+  extends ModelicaModels.Subsystems.BaseClasses.AHU.HeatExchangerPorts;
   Modelica.Fluid.Interfaces.FluidPort_a portExhaustAirIn(redeclare package
       Medium = MediumAir) "Inlet port of exhaust air" annotation (Placement(
         transformation(extent={{148,110},{168,130}}), iconTransformation(extent=

@@ -1,6 +1,7 @@
-within ModelicaModels.SubsystemModels;
+within ModelicaModels.SubsystemModels.AHU;
 model HeatRecovery "Mockup model of the heat recovery"
-  extends BaseClasses.HeatExchangerMockupCommunicationBaseClass(gainHumidity(k=
+  extends BaseClasses.AHU.HeatExchangerMockupCommunicationBaseClass(
+                                                                gainHumidity(k=
           0));
   Modelica.Blocks.Sources.Constant BaseTemperature1(k=0)
     annotation (Placement(transformation(extent={{-80,-10},{-60,10}})));

@@ -1,6 +1,6 @@
-within ModelicaModels.SubsystemModels;
+within ModelicaModels.SubsystemModels.AHU;
 model Heater "Mockup model of the heater"
-  extends BaseClasses.HeatExchangerMockupCommunicationBaseClass;
+  extends BaseClasses.AHU.HeatExchangerMockupCommunicationBaseClass;
 equation
   connect(gain.y, sum.u[2]) annotation (Line(points={{-23,-108},{68,-108},{68,
           -13},{88,-13}}, color={0,0,127}));
