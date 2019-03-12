@@ -19,7 +19,7 @@ class Subsystem():
                  bounds_DVs,model_path, names_BCs,
                    num_VarsOut, names_DVs,
                    output_vars, initial_names, IDs_initial_values,IDs_inputs,cost_par,
-                   type_subSyst=None):
+                   T_set,Q_set, type_subSyst=None):
         self._name = name
         self._type_subSyst = type_subSyst
         self._num_DVs = num_DVs
@@ -39,6 +39,8 @@ class Subsystem():
         self._initial_names = initial_names
         self._IDs_initial_values = IDs_initial_values
         self._IDs_inputs = IDs_inputs
+        self.T_set = T_set
+        self.Q_set = Q_set
 
 
     def GetNeighbour(self, neighbour_name):
@@ -74,10 +76,7 @@ class Subsystem():
         """ Get Measurements """
         self.measurements = self.GetMeasurements(self._IDs_inputs, model)
 
-        if self._type_subSyst != "generator":
-            values = np.concatenate(([0.0], self.measurements[::-1]),axis=0)
-        else:
-            values = [0.0, self.measurements[1], self.measurements[0], self.measurements[3], self.measurements[2]]
+        values = np.concatenate(([0.0], self.measurements[::-1]),axis=0)
         print(values)
 
         # Save new 'CompleteInput.mat' File

@@ -16,10 +16,10 @@ realtime = False         #Choose True for a real-life experiment
 
 """ Settings for BExMoC algorithm """
 # So far: For all subsystems the same settings
-factors_BCs = [1.5, 0.03]              # order: BC1, BC2, ...
-center_vals_BCs = [30, 0.001]
-amount_lower_vals = [9, 0]
-amount_upper_vals = [9, 1]
+factors_BCs = [5, 0.03]              # order: BC1, BC2, ...
+center_vals_BCs = [15, 0.001]
+amount_lower_vals = [2, 0]
+amount_upper_vals = [2, 1]
 exp_BCs = [1, 1]
 amount_vals_BCs = [1, 1]
 
@@ -120,6 +120,8 @@ initial_names= [] #for simulation
 IDs_initial_values= [] #for simulation
 cost_par = [] #for MassFlowRate
 IDs_inputs = []
+T_set = []
+Q_set = []
 
 """ Subsystems """
 # Ground
@@ -136,6 +138,9 @@ initial_names.append([])
 IDs_initial_values.append([])
 IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])
 cost_par.append("decisionVariables.y[1]")
+T_set.append(285)
+Q_set.append(2200)
+    
 
 # Building
 name.append('Building')
@@ -151,3 +156,5 @@ initial_names.append([])
 IDs_initial_values.append([])
 IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
 cost_par.append("decisionVariables.y[1]")
+T_set.append(295)
+Q_set.append(0)
