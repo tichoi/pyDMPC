@@ -4,3 +4,6 @@ PreHeater
 BaseClasses
 Cooler
 Humidifier
+GenericHeater
+GenericCooler
+GenericMainHeater

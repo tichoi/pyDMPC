@@ -6,3 +6,4 @@ CoolerBaseClass
 HRCBaseClass
 BaseClass
 HeatExchangerPorts
+GenericModelBaseClass

@@ -4,3 +4,5 @@ Cooler
 HeatRecovery
 Humidifier
 DetailedModels
+GenericHeaterModel
+GenericCoolerModel
