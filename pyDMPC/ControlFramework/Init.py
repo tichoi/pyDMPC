@@ -40,7 +40,7 @@ cost_factor = 0.5
 sim_time_global = 10000          # -> not used yet
 sync_rate = 5*60                 # Synchronisation rate in seconds
 optimization_interval = 10*60    # After one interval the optimization is repeated
-prediction_horizon = 3600        #Common prediction horizon in seconds
+prediction_horizon = 86400        #Common prediction horizon in seconds
 
 """ Directories and Modelica libraries """
 # Path where the main working directory shall be created

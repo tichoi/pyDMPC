@@ -51,7 +51,7 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
     annotation (Placement(transformation(
         extent={{-6,-6},{6,6}},
         rotation=90,
-        origin={-88,-64})));
+        origin={-88,-86})));
   Modelica.Thermal.HeatTransfer.Components.ThermalResistor thermalResistor(R=0.5)
     annotation (Placement(transformation(
         extent={{-6,-6},{6,6}},
@@ -164,9 +164,9 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         origin={-23,43})));
   Modelica.Blocks.Sources.Constant const1(k=0)
     annotation (Placement(transformation(extent={{-68,42},{-58,52}})));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable
+    annotation (Placement(transformation(extent={{-100,20},{-80,40}})));
 equation
-  connect(fixedTemperature.port, thermalResistor.port_a)
-    annotation (Line(points={{-88,-58},{-88,-48}}, color={191,0,0}));
   connect(pulse1.y, Q_flow_need_cold.u1) annotation (Line(points={{-87.6,76},{
           -66,76},{-66,72.4},{-62.8,72.4}}, color={0,0,127}));
   connect(const.y, Q_flow_need_cold.u2) annotation (Line(points={{-87.6,60},{
@@ -236,6 +236,8 @@ equation
           -42.75,47},{-42.75,49},{-27,49}}, color={0,0,127}));
   connect(senMasFlo.port_a, vol.ports[3]) annotation (Line(points={{-50,2},{-68,
           2},{-68,-3.33333}}, color={0,127,255}));
+  connect(fixedTemperature.port, thermalResistor.port_a)
+    annotation (Line(points={{-88,-80},{-88,-48}}, color={191,0,0}));
  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{120,100}})),                                 Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,
