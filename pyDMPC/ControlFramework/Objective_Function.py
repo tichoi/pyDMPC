@@ -5,6 +5,7 @@
 
 import Init
 import numpy as np
+import pickle
 
 '''Global variables used for simulation handling'''
 # Variable indicating if the subsystem model is compiled
@@ -209,8 +210,11 @@ def Obj(values_DVs, BC, s):
         print("cost_total: " + str(cost_total))
         print("output: " + str(tout))
     else:
+        pickle_in = open("T_set.pickle","rb")
+        T_set = pickle.load(pickle_in)
+
         for tout in output_traj[0]:
-            cost_total += Init.cost_factor*(values_DVs - s.Q_set)**2 + Init.cost_factor*(tout - s.T_set)**2
+            cost_total += Init.cost_factor*(values_DVs - s.Q_set)**2 + Init.cost_factor*(tout - T_set)**2
             #cost_total += max(0.01,cost_par[k])*Init.cost_factor + 100*(max(abs(tout-273-Init.set_point[0])-Init.tolerance,0))**2
             k += 1
 
@@ -218,6 +222,8 @@ def Obj(values_DVs, BC, s):
         print(s._name + " actuators : " + str(values_DVs))
         print("cost_total: " + str(cost_total))
         print("output: " + str(tout))
+
+        pickle_out
 
     '''Temporary objective function value'''
     obj_fnc_vals = [1]

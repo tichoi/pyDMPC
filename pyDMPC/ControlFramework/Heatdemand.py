@@ -4,6 +4,7 @@ import pandas as pd
 import xlrd
 import scipy
 from scipy.integrate import simps
+import os
 
 DATA_FILE = "C:/mst/Grafana/Grafana3.xlsx"
 
@@ -26,24 +27,38 @@ rho_water = 1000            #in kg/m³
 
 #calculation of heatflow in timestep
 dT = np.subtract(T_return, T_flow)
-Q_flow = np.asarray(cp_water*rho_water*(vol_flow/60000)*dT)     #in kW
+Q_flow_geo = np.asarray(cp_water*rho_water*(vol_flow/60000)*dT)                          #in kW
+#COP = np.asarray((Q_flow + Pel)/Pel)                                #if COP(T)
+#COP = 3.5                                                           #if COP = konst
+#
+#if Q_flow_geo >0:
+#    Q_flow = np.asarray((COP/(COP-1))*Q_flow_geo)
+#else:
+#    Q_flow = Q_flow_geo
 
 ##Plotting Q(time)
 #plt.plot(time, Q, lw=2)
 #plt.axis([0, 26768640, -7, 7])
 #plt.show()
 
-#calculating heating budget [kWh/year] of field
-Q_flow_heating = Q_flow.clip(min=0)
-Q_heating = scipy.integrate.simps(Q_flow_heating, time)/3600
-print("The heating budget for one year is", Q_heating, "kWh")
+np.savetxt("C:\mst\Grafana\Q_flow.csv", np.c_([time], [Q_flow_geo]), delimiter=",")
 
-#calculating cooling budget [kWh/year] of field
-Q_flow_cooling = Q_flow.clip(max=0)
-Q_cooling = scipy.integrate.simps(Q_flow_cooling, time)/3600
-print("The cooling budget for one year is", Q_cooling, "kWh")
 
-##Calculating field temperature
-#u =         #heat transfer parameters borehole
-#T_field = np.sum(T_rohr, np.divide(Q_flow, u))
 
+#
+#
+#
+##calculating heating budget [kWh/year] of field
+#Q_flow_heating = Q_flow.clip(min=0)
+#Q_heating = scipy.integrate.simps(Q_flow_heating, time)/3600
+#print("The heating budget for one year is", Q_heating, "kWh")
+#
+##calculating cooling budget [kWh/year] of field
+#Q_flow_cooling = Q_flow.clip(max=0)
+#Q_cooling = scipy.integrate.simps(Q_flow_cooling, time)/3600
+#print("The cooling budget for one year is", Q_cooling, "kWh")
+#
+###Calculating field temperature
+##u =         #heat transfer parameters borehole
+##T_field = np.sum(T_rohr, np.divide(Q_flow, u))
+#
