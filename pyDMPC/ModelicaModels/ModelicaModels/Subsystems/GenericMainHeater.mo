@@ -4,7 +4,8 @@ model GenericMainHeater
     waterSink(nPorts=1),
     warmWaterSource(nPorts=1),
     Pressure1(k=0.1),
-    ValveCharacteristicCurve(table=[0.0,0.0; 1,1]));
+    ValveCharacteristicCurve(table=[0.0,0.0; 1,1]),
+    hex(tau_m=1000));
   Modelica.Fluid.Interfaces.FluidPort_a portSupplyAirIn(redeclare package
       Medium = MediumAir)
                    "Inlet port of supply air"

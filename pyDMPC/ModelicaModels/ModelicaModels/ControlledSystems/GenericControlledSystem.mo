@@ -37,7 +37,7 @@ model GenericControlledSystem
   Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(
     smoothness=Modelica.Blocks.Types.Smoothness.ConstantSegments,
     extrapolation=Modelica.Blocks.Types.Extrapolation.HoldLastPoint,
-    table=[0.0,0.0; 3600,50; 6000,50])
+    table=[0.0,0.0; 3600,20; 6000,20])
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}})));
 initial equation
     //heater.hex.ele[1].mas.T = 293;
