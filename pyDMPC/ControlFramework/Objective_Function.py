@@ -223,8 +223,6 @@ def Obj(values_DVs, BC, s):
         print("cost_total: " + str(cost_total))
         print("output: " + str(tout))
 
-        pickle_out
-
     '''Temporary objective function value'''
     obj_fnc_vals = [1]
 

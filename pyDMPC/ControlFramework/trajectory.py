@@ -9,7 +9,7 @@ from scipy.integrate import simps
 Q_need_heat = np.array([500, 600, 300, 100, 50, 10, 0, 5, 80, 250, 300, 450])   #in kWh/Monat
 Q_need_cold = np.array([25, 25, 110, 200, 400, 600, 650, 600, 450, 300, 150, 50])     #in kWh/Monat
 days = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])               #Tage im Monat: Jan 31, Feb 28, ...
-cp_water = 4.186            #in kJ/(kg K)
+cp_water = 4.186              #in kJ/(kg K)
 m_flow = 0.5                  #kg/s
 
 #Wärmebedarf
