@@ -1,8 +1,9 @@
 within ModelicaModels.SubsystemModels.DetailedModels.Geo;
 model Field "Simplified model of geothermal field"
   extends HeatExchangerCommunicationBaseClass(IntakeAirSource(nPorts=1));
+  replaceable package Water = AixLib.Media.Water;
   AixLib.Fluid.MixingVolumes.MixingVolume vol(redeclare package Medium =
-        MediumWater,
+        Water,
     m_flow_nominal=100,
     m_flow_small=50,
     V=900000,
