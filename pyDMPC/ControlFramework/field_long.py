@@ -44,15 +44,19 @@ dymola.translateModel('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field')
 Q0_heat = np.array([500, 600, 300, 100, 50, 10, 0, 5, 80, 250, 300, 450])
 Q0_cold = np.array([25, 25, 110, 200, 400, 600, 650, 600, 450, 300, 150, 50])
 days = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]) 
-dQ = np.array(Q0_heat/days - Q0_cold/days)
+dQ = np.array(Q0_heat/days - Q0_cold/days)      #in kWh
+dt = 24
+Q_flow = np.divide(dQ*1000,dt)              #in W
 
-Q_set = [dQ[0]] *days[0] + [dQ[1]] *days[1] + [dQ[2]] *days[2] + [dQ[3]] *days[3] + \
-        [dQ[4]] *days[4] + [dQ[5]] *days[5] + [dQ[6]] *days[6] + [dQ[7]] *days[7] + \
-        [dQ[8]] *days[8] + [dQ[9]] *days[9] + [dQ[10]] *days[10] + [dQ[11]] *days[11]
+#Q_set as needed heatflow every hour a year
+Q_set = [Q_flow[0]] *days[0] *24 + [Q_flow[1]] *days[1] *24 + [Q_flow[2]] *days[2] *24 + \
+        [Q_flow[3]] *days[3] *24 + [Q_flow[4]] *days[4] *24 + [Q_flow[5]] *days[5] *24 + \
+        [Q_flow[6]] *days[6] *24 + [Q_flow[7]] *days[7] *24 + [Q_flow[8]] *days[8] *24 + \
+        [Q_flow[9]] *days[9] *24 + [Q_flow[10]] *days[10] *24 + [Q_flow[11]] *days[11] *24
 
 m_flow = [0.00025]*365          #in m³/s
 
-variation = [[Q_set], [m_flow]]
+tab1 = np.array([Q_set], [m_flow])
 
 # Simulate the model
 output = dymola.simulateExtendedModel(
