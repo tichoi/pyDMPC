@@ -40,10 +40,19 @@ dymola.translateModel('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field')
 
 #parameters of the field model
 
-#Input: combiTable "variation": heatflow of the houses need
-Q0_heat = [500, 600, 300, 100, 50, 10, 0, 5, 80, 250, 300, 450]
-Q0_cold = [25, 25, 110, 200, 400, 600, 650, 600, 450, 300, 150, 50]
-Q_set = (Q0_heat - Q0_cold)*np.ones(3*365*24)
+#Input: combiTable "variation": heatflow of the houses need, m_flow
+Q0_heat = np.array([500, 600, 300, 100, 50, 10, 0, 5, 80, 250, 300, 450])
+Q0_cold = np.array([25, 25, 110, 200, 400, 600, 650, 600, 450, 300, 150, 50])
+days = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]) 
+dQ = np.array(Q0_heat/days - Q0_cold/days)
+
+Q_set = [dQ[0]] *days[0] + [dQ[1]] *days[1] + [dQ[2]] *days[2] + [dQ[3]] *days[3] + \
+        [dQ[4]] *days[4] + [dQ[5]] *days[5] + [dQ[6]] *days[6] + [dQ[7]] *days[7] + \
+        [dQ[8]] *days[8] + [dQ[9]] *days[9] + [dQ[10]] *days[10] + [dQ[11]] *days[11]
+
+m_flow = [0.00025]*365          #in m³/s
+
+variation = [[Q_set], [m_flow]]
 
 # Simulate the model
 output = dymola.simulateExtendedModel(
