@@ -105,67 +105,16 @@ class Subsystem():
             import algorithm.BExMoC
             BExMoC = algorithm.BExMoC
 
-            if time_step == Init.sync_rate:
-                if self.values_BCs is None:
-                    self.values_BCs = BExMoC.CalcBCvalues(Init.amount_vals_BCs, Init.exp_BCs, Init.center_vals_BCs, Init.factors_BCs, Init.amount_lower_vals, Init.amount_upper_vals)
+            if self.values_BCs is None:
+                self.values_BCs = BExMoC.CalcBCvalues(Init.amount_vals_BCs, Init.exp_BCs, Init.center_vals_BCs, Init.factors_BCs, Init.amount_lower_vals, Init.amount_upper_vals)
 
-            # Check if optimization phase is due
-            if time_step-time_storage < Init.optimization_interval and time_step != Init.sync_rate:
-                # Interpolation
-                try:
-                    [commands, costs, outputs] = BExMoC.Interpolation(self.measurements, self.lookUpTables[1], self._bounds_DVs, self.lookUpTables[0], self.lookUpTables[2])
+            # Optimization
+            time_storage = time_step # store the time
+            [storage_cost, storage_DV, storage_out, exDestArr] = BExMoC.CalcLookUpTables(self, time_storage, Init.init_conds)
 
-                except:
-                    commands = []
-                    costs = []
-                    outputs = []
 
-                    for i in range(0,len(self.lookUpTables[1])):
-                        commands.append(0)
-                        costs.append(0)
-                        outputs.append([0,0])
 
-            else:
-                # Optimization
-                time_storage = time_step # store the time
-                [storage_cost, storage_DV, storage_out, exDestArr, res_grid] = BExMoC.CalcLookUpTables(self, time_storage, Init.init_conds)
-                self.lookUpTables = [storage_cost, storage_DV, storage_out]
-
-                """ Store look-up table for upstream subsystem in directory of upstream subsystem """
-                if exDestArr is not None and self.neighbour_name is not None:
-                    sio.savemat((Init.path_res +'\\'+Init.name_wkdir +'\\' + self.neighbour_name +'\\' +  Init.fileName_Cost + '.mat'), {Init.tableName_Cost :exDestArr})
-                """Store optimizer results"""
-                sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'OptimizerTrack.mat' ), {'OptimizerTrackCounter11': res_grid})
-
-                try:
-                    [commands, costs, outputs] = BExMoC.Interpolation(self.measurements, self.lookUpTables[1], self._bounds_DVs, self.lookUpTables[0], self.lookUpTables[2])
-
-                    print('measurements: ' + str(self.measurements))
-                    print('commands: ' +str(commands))
-                    print('outputs: ' +str(outputs))
-
-                except:
-                    commands = []
-                    costs = []
-                    outputs = []
-
-                    for i in range(0,len(self.lookUpTables[1])):
-                        commands.append(0)
-                        costs.append(0)
-                        outputs.append(0)
-                    print("Interpolation failed")
-
-            if time_storage != time_step:
-                """ Store global commands""" # just for analysis
-                global gl_commands_costs
-                tz = pytz.timezone('Europe/Berlin')
-                ts = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
-
-                gl_commands_costs.append([np.array([[self.measurements[0]]]), np.array([[self.measurements[1]]]), commands, costs, np.array([[outputs[0][0]]]), np.array([[outputs[0][1]]]), self._name, ts])
-
-                sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'CommandsCosts.mat' ), {'CommandsCosts': gl_commands_costs})
-
-            return commands
+            return storage_DV
 
         elif Init.algorithm == "NC_DMPC":
             """

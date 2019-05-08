@@ -34,13 +34,14 @@ def TranslateModel(model_path, name, position):
     returns:
         None
     """
+    """
     global gl_model_compiled
     if  gl_model_compiled[position-1] == False:
         import os
         import sys
         global dymola
 
-        """ Dymola configurations"""
+        #Dymola configurations
         if dymola is None:
             # Work-around for the environment variable
             sys.path.insert(0, os.path.join(r'C:\Program Files\Dymola 2018 FD01\Modelica\Library\python_interface\dymola.egg'))
@@ -51,7 +52,7 @@ def TranslateModel(model_path, name, position):
             # Start the interface
             dymola = DymolaInterface()
 
-        """ Compilation """
+        #Compilation
         # Open dymola library
         for lib in Init.path_lib:
             check1 = dymola.openModel(os.path.join(lib,'package.mo'))
@@ -66,7 +67,9 @@ def TranslateModel(model_path, name, position):
         print("Translation successful " + str(check2))
         if check2 is True:
             gl_model_compiled[position-1] = True
-
+    """
+    
+    gl_model_compiled[position-1] = True
 
 def Obj(values_DVs, BC, s):
     """
@@ -97,22 +100,6 @@ def Obj(values_DVs, BC, s):
     BC_array[0,0] = 0
     for i,val in enumerate(BC):
         BC_array[0][i+1] = val
-
-    """This file contains the decision variable setting DV1/ DV2/.. """
-    if isinstance (values_DVs, np.ndarray):
-        DV_array = np.empty([1,2])
-        DV_array[0,0] = 0
-        DV_array[0,1] = float(values_DVs)
-    else:
-        DV_array = np.empty([1,len(values_DVs)+1])
-        DV_array[0,0] = 0
-        for i2,val2 in enumerate(values_DVs):
-            DV_array[0][i2+1] = val2
-
-    """Store the decision variables and boundary conditions as .mat files"""
-    subsys_path = Init.path_res +'\\'+Init.name_wkdir+'\\' + s._name
-    sio.savemat((subsys_path +'\\'+ Init.fileName_DVsInputTable + '.mat'), {Init.tableName_DVsInputTable :DV_array})
-    sio.savemat((subsys_path +'\\'+ Init.fileName_BCsInputTable + '.mat'), {Init.tableName_BCsInputTable :BC_array})
 
     final_names = [obj_fnc_val]
 
@@ -170,29 +157,27 @@ def Obj(values_DVs, BC, s):
                 output_traj.append(sim[val].values())
 
     else:
-        command = []
+        command = [[] for l in range(4)] 
         T_cur = []
-        T_prev = []
-        T_met_prev_1 = []
-        T_met_prev_2 = []
-        T_met_prev_3 = []
-        T_met_prev_4 = []
+
         output_traj = []
         output_list = []
         MLPModel = load("C:\\TEMP\Dymola\\" + s._name + ".joblib")
         scaler = load("C:\\TEMP\\Dymola\\" + s._name + "_scaler.joblib")
 
         for t in range(60):
-            T_met_prev_1.append(s._initial_values[0])
-            T_met_prev_2.append(s._initial_values[1])
-            T_met_prev_3.append(s._initial_values[2])
-            T_met_prev_4.append(s._initial_values[3])
-            command.append(values_DVs[0])
-            T_cur.append(BC[0])
-            T_prev.append(BC[0])
+            #for l in range(4):
+                #command[l].append(float(values_DVs[l]))
+            
+            command[0].append(float(values_DVs[0]))
+            command[1].append(float(values_DVs[1]))
+            command[2].append(0.0)
+            command[3].append(float(values_DVs[2]))
+
+            T_cur.append(s.measurements[1])
 
 
-        x_test = np.stack((command,T_cur,T_prev,T_met_prev_1,T_met_prev_2,T_met_prev_3,T_met_prev_4),axis=1)
+        x_test = np.stack((command[0],command[1],command[2],command[3],T_cur),axis=1)
 
         scaled_instances = scaler.transform(x_test)
         traj = MLPModel.predict(scaled_instances)
@@ -203,9 +188,9 @@ def Obj(values_DVs, BC, s):
             output_list.append(traj[-1])
             output_list.append(0.3+random.uniform(0.0,0.01))
 
-        print(values_DVs[0])
-        print(BC[0])
-        print(traj)
+        #print(values_DVs)
+        #print(BC[0])
+        #print(traj)
 
 
     if s._output_vars is not None:
@@ -216,44 +201,21 @@ def Obj(values_DVs, BC, s):
 
     """all other subsystems + costs of downstream system"""
     if s._type_subSyst != "consumer":
-        x = sio.loadmat(Init.path_res + '\\'+Init.name_wkdir+'\\' + s._name
-        + '\\' + Init.fileName_Cost + '.mat')
-
-        storage_cost = x[Init.tableName_Cost]
-
-        """Interpolation"""
-        # Currently, the local cost depends on the relative decision variable
-        costs_neighbor = interpolate.interp2d(storage_cost[0,1:],
-        storage_cost[1:,0], storage_cost[1:,1:], kind = 'linear',
-        fill_value = 10000)
-
-    """all other subsystems + costs of downstream system"""
-    if s._type_subSyst != "consumer":
-        x = sio.loadmat(Init.path_res + '\\'+Init.name_wkdir+'\\' + s._name
-        + '\\' + Init.fileName_Cost + '.mat')
-
-        storage_cost = x[Init.tableName_Cost]
-
-        """Interpolation"""
-        # Currently, the local cost depends on the relative decision variable
-        costs_neighbor = interpolate.interp2d(storage_cost[0,1:],
-        storage_cost[1:,0], storage_cost[1:,1:], kind = 'linear',
-        fill_value = 10000)
+        
+        #print(output_traj)
 
         for l,tout in enumerate(output_traj[0]):
-            if l > 100 or s._model_type == "MLP":
-                # Avoid nan by suppressing operations with small numbers
-                if values_DVs > 0.0001:
-                    cost_total += values_DVs*s._cost_factor + costs_neighbor(0.008,tout-273)
-                else:
-                    cost_total += costs_neighbor(0.008,tout-273)
+            #for m in range(1,s._num_DVs-1):
+            cost_total += (abs(values_DVs[1])+abs(values_DVs[2]))*s._cost_factor
+            
+            cost_total += 10*(max(abs(tout-273-Init.set_point[0])-Init.tolerance,0))**2
         if s._model_type == "Modelica":
             cost_total = cost_total/len(output_traj[0])
         else:
             cost_total = cost_total/len(output_traj[0])
-        print(s._name + " actuators : " + str(values_DVs))
-        print("cost_total: " + str(cost_total))
-        print("output: " + str(tout))
+        #print(s._name + " actuators : " + str(values_DVs))
+        #print("cost_total: " + str(cost_total))
+        #print("output: " + str(tout))
         #time.sleep(2)
 
     else:
@@ -262,17 +224,14 @@ def Obj(values_DVs, BC, s):
                 cost_total += 10*(max(abs(tout-273-Init.set_point[0])-Init.tolerance,0))**2
 
         cost_total = cost_total/len(output_traj[0])
-        print(s._name + " actuators : " + str(values_DVs))
-        print("cost_total: " + str(cost_total))
-        print("output: " + str(tout))
+        #print(s._name + " actuators : " + str(values_DVs))
+        #print("cost_total: " + str(cost_total))
+        #print("output: " + str(tout))
 
-    '''Temporary objective function value'''
-    obj_fnc_vals = [1]
 
     """ Track Optimizer """
-    global gl_res_grid
-    step = np.array([[float(values_DVs)], [obj_fnc_vals[-1]]])
-    gl_res_grid = np.append(gl_res_grid,step,axis = 1)
+    #print(values_DVs)
+    #print(cost_total)
 
     return cost_total
 

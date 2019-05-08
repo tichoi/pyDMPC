@@ -33,7 +33,8 @@ def main():
 
     os.mkdir("Inputs")
 
-    """Load the FMU model, set the experiment and initialize the inputs"""
+    """
+    #Load the FMU model, set the experiment and initialize the inputs
     global dymola
     dymola = None
     # Work-around for the environment variable
@@ -45,7 +46,7 @@ def main():
     # Start the interface
     dymola = DymolaInterface()
 
-    """ Simulation """
+    #Simulation
     # Open dymola library
 
     for lib in Init.path_lib:
@@ -54,13 +55,14 @@ def main():
 
     dymola.cd(Init.path_res + '\\' + Init.name_wkdir)
 
+    """
+    
     # Translate the model to FMU
     if Init.create_FMU:
         dymola.ExecuteCommand('translateModelFMU("'+Init.path_fmu+'", true, "'+ Init.name_fmu+'", "1", "cs", false, 0)')
     else:
         shutil.copyfile(Init.path_res + "\\" + Init.name_fmu + ".fmu", Init.path_res+'\\'+Init.name_wkdir +'\\'+Init.name_fmu+'.fmu')
-
-
+    
     model = load_fmu(Init.path_res+'\\'+Init.name_wkdir +'\\'+Init.name_fmu+'.fmu')
 
     model.set('humidifierWSP1',0)
@@ -123,46 +125,19 @@ def main():
 
                 """The main calculations are carried out by invoking the :func:'CalcDVvalues' method. The BExMoC algorithm exchanges tables between the subsystems in a .mat format"""
                 commands = (s.CalcDVvalues(time_step, time_storage,0, model))
-
-                command_all.append(commands)
-
-                #Save the look-up tables in .mat files
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'DV_lookUpTable' + str(counter) + '.mat' ),
-                {'DV_lookUpTable': s.lookUpTables[1]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'Costs_lookUpTable' + str(counter) + '.mat' ),
-                {'Cost_lookUpTable': s.lookUpTables[0]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'Output_Table' + str(counter) + '.mat' ),
-                {'Output_Table': s.lookUpTables[2]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'command' + str(counter) + '.mat' ),
-                {'Output_Table': commands}))
-
-        #For real time experiments, the excecution needs to be paused
-        if Init.realtime:
-            if time_step > 0:
-                time.sleep(max(Init.sync_rate-time.time()+start,0))
-                start = time.time()
-        else:
-            length = len(Init.name)
-            for l,val in enumerate(command_all):
-                if Init.names_DVs[length-l-1] != None:
-                    model.set(Init.names_DVs[length-l-1], val)
-
-                print(val)
+                print(commands)
+                #for l,val in enumerate(commands):
+                    #model.set(s._names_DVs[l], val)
+                model.set("valveHRS", commands[0])
+                model.set("valvePreHeater", commands[1])
+                model.set("valveCooler", 0.0)
+                model.set("valveHeater", commands[2])
 
             model.do_step(time_step, Init.sync_rate)
             print('Proceding')
 
-        if time_step-time_storage >= Init.optimization_interval:
-            time_storage = time_step
         time_step += Init.sync_rate
-        counter += 1
+
 
     Objective_Function.CloseDymola()
 

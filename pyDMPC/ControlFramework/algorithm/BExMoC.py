@@ -105,49 +105,40 @@ def CalcLookUpTables(s, time_storage, init_conds):
         Objective_Function.ChangeDir(s._name)
 
         boundaries = s._bounds_DVs #[low, high]
-
+        """
         if boundaries[0] != boundaries[1]:
-            ranges = [slice(boundaries[0],boundaries[1]+5, 10)]
+            ranges = [slice(boundaries[0],boundaries[1]+5, 10) for l in range(s._num_DVs)]
 
-            """ First conduct a brute force search """
+            #First conduct a brute force search
             obj_fun_val = brute(Objective_Function.Obj,ranges,args = (BC, s), disp=True, full_output=True, finish = None)
             init_conds = obj_fun_val[0]
             cons = ({'type':'ineq','fun': lambda x: x-boundaries[0]},
                     {'type':'ineq','fun': lambda x: boundaries[1]-x})
 
-            """ Perform an addtional optimization to refine the previous findings """
+            #Perform an addtional optimization to refine the previous findings 
             obj_fun_val = minimize(Objective_Function.Obj,init_conds,args = (BC, s),method='SLSQP',constraints=cons, options={'maxiter':100, 'ftol':0.01})
         else:
-            ranges = [slice(boundaries[0],boundaries[1]+1, 1)]
+            ranges = [slice(boundaries[0],boundaries[1]+1, 1) for l in range(s._num_DVs)]
             obj_fun_val = brute(Objective_Function.Obj,ranges,args = (BC, s), disp=True, full_output=True, finish = None)
+        """
+        ranges = [slice(boundaries[0],boundaries[1]+5, 10) for l in range(s._num_DVs)]
+        obj_fun_val = brute(Objective_Function.Obj,ranges,args = (BC, s), disp=True, full_output=True, finish = None)
+        
+        init_conds = obj_fun_val[0]
+
+        bounds = ([obj_fun_val[0][0]-10,obj_fun_val[0][0]+10],
+                  [obj_fun_val[0][1]-10,obj_fun_val[0][1]+10],
+                  [obj_fun_val[0][2]-10,obj_fun_val[0][2]+10])#,
+                  #[obj_fun_val[0][3]-10,obj_fun_val[0][3]+10])
+
+        obj_fun_val = minimize(Objective_Function.Obj,init_conds,args = (BC, s),method='SLSQP',bounds=bounds, options={'maxiter':100, 'ftol':0.01})
+
 
         """
         Post processing of the different returned results of the
         optimization algorithms
         """
-        if isinstance(obj_fun_val, tuple):
-            """ fill storage_grid """
-            if counter ==0:
-                res_grid = np.concatenate((obj_fun_val[2][np.newaxis], obj_fun_val[3][np.newaxis]),axis = 0)
-            else:
-                res_grid = np.append(res_grid,obj_fun_val[3][np.newaxis],axis = 0)
-        else:
-            res_grid_new = Objective_Function.GetOptTrack()
-            Objective_Function.DelLastTrack()
-            if counter ==0:
-                res_grid = res_grid_new
-            else:
-                stor_shape = res_grid.shape
-                new_shape = res_grid_new.shape
-                if stor_shape[1] != new_shape[1]:
-                    to_add = abs(stor_shape[1]-new_shape[1])
-                    if stor_shape[1] > new_shape[1]:
-                        add_array = np.zeros([new_shape[0],to_add])
-                        res_grid_new = np.append(res_grid_new,add_array, axis = 1)
-                    else:
-                        add_array = np.zeros([stor_shape[0],to_add])
-                        res_grid = np.append(res_grid,add_array, axis = 1)
-                res_grid = np.append(res_grid,res_grid_new,axis = 0)
+
 
         """ fill look-up table DV and Cost """
         j = len(s.values_BCs)
@@ -181,14 +172,8 @@ def CalcLookUpTables(s, time_storage, init_conds):
 
         counter = counter + 1
 
-    if isinstance(obj_fun_val, tuple):
-        storage_grid = np.append(storage_grid,res_grid,axis=1)
-    else:
-        storage_grid = np.append(storage_grid_alt2,res_grid,axis=1)
 
-
-    storage_grid = res_grid
-    return [storage_cost, storage_DV, storage_out, exDestArr, storage_grid]
+    return [storage_cost, DV_values, storage_out, exDestArr]
 
 
 def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost, storage_out):
