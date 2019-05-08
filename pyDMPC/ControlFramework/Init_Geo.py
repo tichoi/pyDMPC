@@ -122,6 +122,7 @@ cost_par = [] #for MassFlowRate
 IDs_inputs = []
 T_set = []
 Q_set = []
+variation = []
 
 """ Subsystems """
 # Ground
@@ -140,6 +141,7 @@ IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])
 cost_par.append("decisionVariables.y[1]")
 T_set.append(285)
 Q_set.append(2200)
+variation.append(True)
     
 
 # Building
@@ -158,3 +160,4 @@ IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
 cost_par.append("decisionVariables.y[1]")
 T_set.append(295)
 Q_set.append(0)
+variation.append(True)
