@@ -19,7 +19,7 @@ class Subsystem():
                  bounds_DVs,model_path, names_BCs,
                    num_VarsOut, names_DVs,
                    output_vars, initial_names, IDs_initial_values,IDs_inputs,cost_par,
-                   T_set,Q_set, type_subSyst=None):
+                   T_set,Q_set,variation, type_subSyst=None):
         self._name = name
         self._type_subSyst = type_subSyst
         self._num_DVs = num_DVs
@@ -41,6 +41,7 @@ class Subsystem():
         self._IDs_inputs = IDs_inputs
         self.T_set = T_set
         self.Q_set = Q_set
+        self.variation = variation
 
 
     def GetNeighbour(self, neighbour_name):
@@ -110,7 +111,10 @@ class Subsystem():
             if time_step-time_storage < Init.optimization_interval and time_step != Init.sync_rate:
                 # Interpolation
                 try:
-                    [commands, costs, outputs] = BExMoC.Interpolation(self.measurements, self.lookUpTables[1], self._bounds_DVs, self.lookUpTables[0], self.lookUpTables[2])
+                    [commands, costs, outputs] = BExMoC.Interpolation(
+                            self.measurements, self.lookUpTables[1], 
+                            self._bounds_DVs, self.lookUpTables[0], 
+                            self.lookUpTables[2],self.variation)
 
                 except:
                     commands = []
@@ -135,7 +139,10 @@ class Subsystem():
                 sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'OptimizerTrack.mat' ), {'OptimizerTrackCounter11': res_grid})
 
                 try:
-                    [commands, costs, outputs] = BExMoC.Interpolation(self.measurements, self.lookUpTables[1], self._bounds_DVs, self.lookUpTables[0], self.lookUpTables[2])
+                    [commands, costs, outputs] = BExMoC.Interpolation(
+                            self.measurements, self.lookUpTables[1], 
+                            self._bounds_DVs, self.lookUpTables[0], 
+                            self.lookUpTables[2], self.variation)
 
                     print('measurements: ' + str(self.measurements))
                     print('commands: ' +str(commands))
