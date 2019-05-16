@@ -146,7 +146,10 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
       Placement(transformation(
         extent={{-4,-4},{4,4}},
         rotation=90,
-        origin={12,100})));
+        origin={12,100}), iconTransformation(
+        extent={{-4,-4},{4,4}},
+        rotation=90,
+        origin={0,16})));
   Modelica.Blocks.Interfaces.RealOutput fieldMassflow_in annotation (Placement(
         transformation(
         extent={{-4,-4},{4,4}},

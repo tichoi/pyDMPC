@@ -16,10 +16,10 @@ realtime = False         #Choose True for a real-life experiment
 
 """ Settings for BExMoC algorithm """
 # So far: For all subsystems the same settings
-factors_BCs = [5, 0.03]              # order: BC1, BC2, ...
-center_vals_BCs = [15, 0.001]
-amount_lower_vals = [2, 0]
-amount_upper_vals = [2, 1]
+factors_BCs = [1.5, 0.03]              # order: BC1, BC2, ...
+center_vals_BCs = [30, 0.001]
+amount_lower_vals = [9, 0]
+amount_upper_vals = [9, 1]
 exp_BCs = [1, 1]
 amount_vals_BCs = [1, 1]
 
@@ -40,7 +40,7 @@ cost_factor = 0.5
 sim_time_global = 10000          # -> not used yet
 sync_rate = 5*60                 # Synchronisation rate in seconds
 optimization_interval = 10*60    # After one interval the optimization is repeated
-prediction_horizon = 86400        #Common prediction horizon in seconds
+prediction_horizon = 3600        #Common prediction horizon in seconds
 
 """ Directories and Modelica libraries """
 # Path where the main working directory shall be created
@@ -122,29 +122,48 @@ cost_par = [] #for MassFlowRate
 IDs_inputs = []
 T_set = []
 Q_set = []
+variation = []
 
 """ Subsystems """
-# Ground
-name.append('Geothermal_Field')
-position.append(2)
+#Ground_long
+name.append('Field_long')
+position.append(1)
 type_subSyst.append('generator')
 num_DecVars.append(0)
-num_VarsOut.append(2)
+num_VarsOut.append(1)
 bounds_DVs.append([0,0])
-model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field')
+model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field_new')
 names_DVs.append(None)
-output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
+output_vars.append(["supplyTemperature.T"])
 initial_names.append([])
 IDs_initial_values.append([])
-IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])
-cost_par.append("decisionVariables.y[1]")
+IDs_inputs.append(["fieldTemperature_in"])
+cost_par.append("")
 T_set.append(285)
 Q_set.append(2200)
-    
+variation.append(False)
 
+## Ground_short
+#name.append('Field_short')
+#position.append(2)
+#type_subSyst.append('generator')
+#num_DecVars.append(0)
+#num_VarsOut.append(2)
+#bounds_DVs.append([0,0])
+#model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field')
+#names_DVs.append(None)
+#output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
+#initial_names.append([])
+#IDs_initial_values.append([])
+#IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])
+#cost_par.append("decisionVariables.y[1]")
+#T_set.append(285)
+#Q_set.append(2200)
+#variation.append(True)
+    
 # Building
 name.append('Building')
-position.append(1)
+position.append(2)
 type_subSyst.append('consumer')
 num_DecVars.append(1)
 num_VarsOut.append(2)
@@ -158,3 +177,4 @@ IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
 cost_par.append("decisionVariables.y[1]")
 T_set.append(295)
 Q_set.append(0)
+variation.append(True)
