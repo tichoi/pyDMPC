@@ -32,7 +32,7 @@ model HeatExchangerCommunicationBaseClass2
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
-        origin={-110,-110})));
+        origin={-224,-42})));
   Modelica.Blocks.Sources.CombiTimeTable MeasuredData(
     tableOnFile=true,
     tableName="InputTable",
@@ -105,6 +105,10 @@ model HeatExchangerCommunicationBaseClass2
         origin={-120,16})));
   Modelica.Blocks.Math.Product product1
     annotation (Placement(transformation(extent={{-114,72},{-94,92}})));
+  Modelica.Blocks.Math.Product product2 annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=-90,
+        origin={-186,108})));
 equation
 
   connect(supplyTemperature.T, fromKelvin.Kelvin)
@@ -113,8 +117,6 @@ equation
           203},{-100,203},{-100,175.2}}, color={0,0,127}));
   connect(massFlow.port_b, IntakeAirSink.ports[1])
     annotation (Line(points={{128,12},{170,12}}, color={0,127,255}));
-  connect(variation.y[2], division.u1) annotation (Line(points={{-219,140},{
-          -204,140},{-204,116},{-186,116},{-186,92}}, color={0,0,127}));
   connect(product.u2, cp_water.y) annotation (Line(points={{-226,126},{-236,126},
           {-236,100},{-222,100},{-222,85}}, color={0,0,127}));
   connect(product.y, division.u2) annotation (Line(points={{-220,103},{-220,100},
@@ -132,11 +134,18 @@ equation
   connect(toKelvin1.Kelvin, IntakeAirSource.T_in)
     annotation (Line(points={{-109,16},{-80,16}}, color={0,0,127}));
   connect(variation.y[3], product1.u1) annotation (Line(points={{-219,140},{
-          -182,140},{-182,100},{-116,100},{-116,88}}, color={0,0,127}));
+          -116,140},{-116,110},{-116,110},{-116,88}}, color={0,0,127}));
   connect(product1.y, IntakeAirSource.m_flow_in) annotation (Line(points={{-93,
           82},{-84,82},{-84,24},{-78,24},{-78,20}}, color={0,0,127}));
-  connect(product1.y, product.u1) annotation (Line(points={{-93,82},{-93,138},{
-          -214,138},{-214,126}}, color={0,0,127}));
+  connect(product1.y, product.u1) annotation (Line(points={{-93,82},{-93,108},{
+          -86,108},{-86,136},{-214,136},{-214,126}}, color={0,0,127}));
+  connect(division.u1, product2.y)
+    annotation (Line(points={{-186,92},{-186,97}}, color={0,0,127}));
+  connect(variation.y[2], product2.u2) annotation (Line(points={{-219,140},{
+          -204,140},{-204,134},{-192,134},{-192,120}}, color={0,0,127}));
+  connect(decisionVariables.y[1], product2.u1) annotation (Line(points={{-213,
+          -42},{-170,-42},{-170,-38},{-142,-38},{-142,120},{-180,120}}, color={
+          0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-240,-200},
             {200,220}})),       Diagram(coordinateSystem(preserveAspectRatio=
             false, extent={{-240,-200},{200,220}})));

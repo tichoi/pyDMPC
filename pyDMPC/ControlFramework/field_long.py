@@ -72,6 +72,9 @@ BC_array = tab.transpose(1,0)
 
 sio.savemat((path_res +'\\'+ Init.fileName_BCsInputTable + '.mat'), {Init.tableName_BCsInputTable :BC_array})
 
+pickle_out = open(path_res + "\\" + "T_out.pickle","wb")
+pickle.dump(BC_array, pickle_out)
+
 #testList = [variation.column[1],variation.column[2]]
 #testValues = [BC_array[1],BC_array[2]]
 testList = ['']

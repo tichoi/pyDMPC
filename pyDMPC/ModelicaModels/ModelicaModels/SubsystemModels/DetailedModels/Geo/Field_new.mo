@@ -3,18 +3,19 @@ model Field_new "Simplified model of geothermal field"
   extends HeatExchangerCommunicationBaseClass2(
     cp_water(k=4180),
     variation(fileName="C:/mst/dymola/Geo_long/variation.mat", columns=1:3),
-    MeasuredData(tableOnFile=false, table=[0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,
-          0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0]),
-    decisionVariables(tableOnFile=false, table=[0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,
-          0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0]),
+    MeasuredData(table=[0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,
+          0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0], tableOnFile=true),
+    decisionVariables(table=[0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0;
+          0.0,0.0,0.0; 0.0,0.0,0.0], tableOnFile=true),
     add1(k2=-1),
     Kelvin(k=273.15),
     supplyTemperature(T(start=285.15, fixed=true)),
-    IntakeAirSource(nPorts=1));
+    IntakeAirSource(nPorts=1),
+    massFlow(m_flow(start=12.25)));
   replaceable package Water = AixLib.Media.Water;
 
-  AixLib.Fluid.Geothermal.Borefields.TwoUTubes borFie(redeclare package Medium =
-        Water,
+  AixLib.Fluid.Geothermal.Borefields.TwoUTubes borFie(redeclare package Medium
+      = Water,
     borFieDat(
       filDat=AixLib.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(),
       soiDat=AixLib.Fluid.Geothermal.Borefields.Data.Soil.SandStone(),

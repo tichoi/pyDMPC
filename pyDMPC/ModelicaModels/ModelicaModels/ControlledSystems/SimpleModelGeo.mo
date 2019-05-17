@@ -19,7 +19,7 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
     V=900000,
     nPorts=3,
     p_start=150000,
-    T_start=283.15)                 annotation (
+    T_start=285.15)                 annotation (
       Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
@@ -167,8 +167,6 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         origin={-23,43})));
   Modelica.Blocks.Sources.Constant const1(k=0)
     annotation (Placement(transformation(extent={{-68,42},{-58,52}})));
-  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable
-    annotation (Placement(transformation(extent={{-100,20},{-80,40}})));
 equation
   connect(pulse1.y, Q_flow_need_cold.u1) annotation (Line(points={{-87.6,76},{
           -66,76},{-66,72.4},{-62.8,72.4}}, color={0,0,127}));

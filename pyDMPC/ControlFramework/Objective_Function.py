@@ -210,8 +210,8 @@ def Obj(values_DVs, BC, s):
         print("cost_total: " + str(cost_total))
         print("output: " + str(tout))
     else:
-        pickle_in = open("T_set.pickle","rb")
-        T_set = pickle.load(pickle_in)
+        #pickle_in = open("C:\\mst\\dymola\\Geo_long\\T_out.pickle","rb")
+        #T_set = pickle.load(pickle_in)
 
         for tout in output_traj[0]:
             cost_total += Init.cost_factor*(values_DVs - s.Q_set)**2 + Init.cost_factor*(tout - T_set)**2
