@@ -123,6 +123,7 @@ IDs_inputs = []
 T_set = []
 Q_set = []
 variation = []
+pred_hor = []
 
 """ Subsystems """
 #Ground_long
@@ -130,11 +131,11 @@ name.append('Field_long')
 position.append(1)
 type_subSyst.append('generator')
 num_DecVars.append(0)
-num_VarsOut.append(1)
+num_VarsOut.append(2)
 bounds_DVs.append([0,0])
 model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field_new')
 names_DVs.append(None)
-output_vars.append(["supplyTemperature.T"])
+output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
 initial_names.append([])
 IDs_initial_values.append([])
 IDs_inputs.append(["fieldTemperature_in"])
@@ -142,6 +143,7 @@ cost_par.append("")
 T_set.append(285)
 Q_set.append(2200)
 variation.append(False)
+pred_hor.append(3*365*24*86400.0)
 
 ## Ground_short
 #name.append('Field_short')
@@ -170,11 +172,12 @@ num_VarsOut.append(2)
 bounds_DVs.append([0,100])
 model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Building')
 names_DVs.append('valveQflow')
-output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
-initial_names.append([])
-IDs_initial_values.append([])
-IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
+output_vars.append(["supplyTemperature.T"])
+initial_names.append(["variation.y[2]","variation.y[3]"])
+IDs_initial_values.append(["vol1.T","senMasFlo2.m_flow"])
+IDs_inputs.append(["buildingTemperature_in","buildingMassflow_in"])
 cost_par.append("decisionVariables.y[1]")
 T_set.append(295)
 Q_set.append(0)
 variation.append(True)
+pred_hor.append(5*3600)
