@@ -17,14 +17,14 @@ names = ["valveHRS","valvePreHeater","valveCooler","valveHeater"]
 T = [2.0]
 T_test = [10.0]
 
-for k in range(49):
-    T.append(random.uniform(2.0, 45.0))
-    T_test.append(random.uniform(10.0, 40.0))
+for k in range(100):
+    T.append(random.uniform(2.0, 55.0))
+    T_test.append(random.uniform(10.0, 45.0))
 
-T.append(45.0)
-T_test.append(40.0)
+T.append(55.0)
+T_test.append(45.0)
 
-for k in range(50):
+for k in range(100):
     for t in range(100):
         for l in range(4):
             if t%120 == 0:

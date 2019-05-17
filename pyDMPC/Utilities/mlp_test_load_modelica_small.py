@@ -13,8 +13,8 @@ def main():
     sync_rate = 60
 
     # Load the black box model and the corresponidng scaler
-    MLPModel = load(r"C:\TEMP\Dymola\Pre_heater.joblib")
-    scaler = load(r"C:\TEMP\Dymola\Pre_heater_scaler.joblib")
+    MLPModel = load(r"C:\TEMP\Dymola\Heat_recovery_system.joblib")
+    scaler = load(r"C:\TEMP\Dymola\Heat_recovery_system_scaler.joblib")
 
     T_prev = []
     T_met_prev_1 = []
@@ -27,14 +27,14 @@ def main():
     y_train_4 = []
     y_train_5 = []
     
-    file = open(r"C:\TEMP\Dymola\command_test_preheater.obj","rb")
+    file = open(r"C:\TEMP\Dymola\command_test_HRC.obj","rb")
     command = pickle.load(file)
     
     file = open(r"C:\TEMP\Dymola\T_cur_test.obj","rb")
     T_cur = pickle.load(file)
     
 
-    model = load_fmu(r"C:\TEMP\Dymola\ModelicaModels_SubsystemModels_DetailedModels_HeaterML.fmu")
+    model = load_fmu(r"C:\TEMP\Dymola\ModelicaModels_SubsystemModels_DetailedModels_HRCML.fmu")
 
     model.set('valveOpening',0)
     model.initialize()
@@ -44,7 +44,7 @@ def main():
     c = 0
     
     
-    for k in range(50):
+    for k in range(100):
         for t in range(100):
 
             if c >= 0:
@@ -97,7 +97,7 @@ def main():
     ax.legend()
     plt.xlabel("Time in minutes",fontsize=16)
     plt.ylabel("Temperature in °C",fontsize=16)
-    plt.savefig(r"C:\TEMP\preheater.svg",format='svg')
+    plt.savefig(r"C:\TEMP\HRC.svg",format='svg')
     plt.show()
 
     rmse = 0

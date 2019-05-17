@@ -17,8 +17,8 @@ def main():
     file = open(r"C:\TEMP\Dymola\command_HRC.obj","rb")
     command[0] = pickle.load(file)
     
-    file = open(r"C:\TEMP\Dymola\command_preheater.obj","rb")
-    command[1] = pickle.load(file)
+    #file = open(r"C:\TEMP\Dymola\command_preheater.obj","rb")
+    command[1] = np.zeros(len(command[0]))
     
     file = open(r"C:\TEMP\Dymola\command_cooler.obj","rb")
     command[2] = pickle.load(file)
@@ -29,8 +29,8 @@ def main():
     file = open(r"C:\TEMP\Dymola\command_test_HRC.obj","rb")
     command_test[0] = pickle.load(file)
     
-    file = open(r"C:\TEMP\Dymola\command_test_preheater.obj","rb")
-    command_test[1] = pickle.load(file)
+    #file = open(r"C:\TEMP\Dymola\command_test_preheater.obj","rb")
+    command_test[1] = np.zeros(len(command[0]))
     
     file = open(r"C:\TEMP\Dymola\command_test_cooler.obj","rb")
     command_test[2] = pickle.load(file)
@@ -73,8 +73,9 @@ def main():
     c = 0
 
     """ Actual training sequence """
-    for k in range(50):
+    for k in range(100):
         for t in range(100):
+            print(c)
         
             """Write random values to the controlled variables"""    
             for l in range(4):
