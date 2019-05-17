@@ -123,6 +123,7 @@ IDs_inputs = []
 T_set = []
 Q_set = []
 variation = []
+pred_hor = []
 
 """ Subsystems """
 #Ground_long
@@ -142,6 +143,7 @@ cost_par.append("")
 T_set.append(285)
 Q_set.append(2200)
 variation.append(False)
+pred_hor.append(3*365*24*86400.0)
 
 ## Ground_short
 #name.append('Field_short')
@@ -178,3 +180,4 @@ cost_par.append("decisionVariables.y[1]")
 T_set.append(295)
 Q_set.append(0)
 variation.append(True)
+pred_hor.append(5*3600)

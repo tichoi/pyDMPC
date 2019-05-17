@@ -121,7 +121,7 @@ def Obj(values_DVs, BC, s):
                 simStat = dymola.simulateExtendedModel(
                 problem=s._model_path,
                 startTime=Init.start_time,
-                stopTime=Init.stop_time,
+                stopTime=s.stop_time,
                 outputInterval=Init.incr,
                 method="Dassl",
                 tolerance=Init.tol,
@@ -132,7 +132,7 @@ def Obj(values_DVs, BC, s):
                 simStat = dymola.simulateExtendedModel(
                     problem=s._model_path,
                     startTime=Init.start_time,
-                    stopTime=Init.stop_time,
+                    stopTime=s.stop_time,
                     outputInterval=Init.incr,
                     method="Dassl",
                     tolerance=Init.tol,

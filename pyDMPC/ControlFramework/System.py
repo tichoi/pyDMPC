@@ -54,6 +54,7 @@ class System:
                 Init.T_set[i],
                 Init.Q_set[i],
                 Init.variation[i],
+                Init.pred_hor[i],
                 Init.type_subSyst[i])
                 )
         subsystems.sort(key = lambda x: x.position)
