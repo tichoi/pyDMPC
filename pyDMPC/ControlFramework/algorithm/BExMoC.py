@@ -33,15 +33,19 @@ def CalcBCvalues(amount_vals_BCs, exp_BCs, center_vals_BCs, factors_BCs, amount_
         amount_lower_vals_BCs =[x/2 for x in amount_vals_BCs]
         amount_lower_vals_BCs = [math.floor(x) for x in amount_lower_vals_BCs]
         amount_upper_vals_BCs = [amount_vals_BCs[x]-amount_lower_vals_BCs[x]-1 for x in range(len(amount_vals_BCs))]
-    values_BCs = []
-    for i in range(len(amount_vals_BCs)):
-        temp_list = []
-        for j in range(amount_lower_vals_BCs[i]):
-            temp_list.append(center_vals_BCs[i] - (amount_lower_vals_BCs[i]-j)**exp_BCs[i]*factors_BCs[i])
-        for j in range(amount_upper_vals_BCs[i]+1):
-            temp_list.append(center_vals_BCs[i] + j**exp_BCs[i]*factors_BCs[i])
-        values_BCs.append(temp_list)
-    values_BCs[0].insert(0,0)
+    if amount_lower_vals_BCs + amount_lower_vals_BCs != 0:
+        values_BCs = []
+        for i in range(len(amount_vals_BCs)):
+            temp_list = []
+            for j in range(amount_lower_vals_BCs[i]):
+                temp_list.append(center_vals_BCs[i] - (amount_lower_vals_BCs[i]-j)**exp_BCs[i]*factors_BCs[i])
+            for j in range(amount_upper_vals_BCs[i]+1):
+                temp_list.append(center_vals_BCs[i] + j**exp_BCs[i]*factors_BCs[i])
+            values_BCs.append(temp_list)
+        values_BCs[0].insert(0,0)
+        #print(values_BCs)
+    else:
+        values_BCs = [[25], [0.007]]
 
     return values_BCs
 
@@ -107,16 +111,16 @@ def CalcLookUpTables(s, time_storage, init_conds):
         boundaries = s._bounds_DVs #[low, high]
 
         if boundaries[0] != boundaries[1]:
-            ranges = [slice(boundaries[0],boundaries[1]+5, 5)]
+            ranges = [slice(boundaries[0],boundaries[1]+5, 10)]
 
             """ First conduct a brute force search """
             obj_fun_val = brute(Objective_Function.Obj,ranges,args = (BC, s), disp=True, full_output=True, finish = None)
-            init_conds = obj_fun_val[0]-5
+            init_conds = obj_fun_val[0]
             cons = ({'type':'ineq','fun': lambda x: x-boundaries[0]},
                     {'type':'ineq','fun': lambda x: boundaries[1]-x})
 
             """ Perform an addtional optimization to refine the previous findings """
-            obj_fun_val = minimize(Objective_Function.Obj,init_conds,args = (BC, s),method='COBYLA',constraints=cons, options={'maxiter':100, 'catol':0.0002, 'rhobeg':5})
+            obj_fun_val = minimize(Objective_Function.Obj,init_conds,args = (BC, s),method='SLSQP',constraints=cons, options={'maxiter':100, 'ftol':0.01})
         else:
             ranges = [slice(boundaries[0],boundaries[1]+1, 1)]
             obj_fun_val = brute(Objective_Function.Obj,ranges,args = (BC, s), disp=True, full_output=True, finish = None)
@@ -171,9 +175,8 @@ def CalcLookUpTables(s, time_storage, init_conds):
             storage_cost[counter,len(s.values_BCs)] = obj_fun_val.get('fun')
             exDestArr[index1[0].tolist(), index2[1].tolist()] = obj_fun_val.get('fun')
 
-        # Get Output Variables
+        """ Get Output Variables """
         output_vals = Objective_Function.GetOutputVars()
-
         """ Fill look-up table Out """
         k = len(s.values_BCs)
         while k < (s.num_VarsOut+len(s.values_BCs)):
@@ -187,12 +190,13 @@ def CalcLookUpTables(s, time_storage, init_conds):
     else:
         storage_grid = np.append(storage_grid_alt2,res_grid,axis=1)
 
+
     storage_grid = res_grid
+    #print(exDestArr)
     return [storage_cost, storage_DV, storage_out, exDestArr, storage_grid]
 
 
-def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost, 
-                  storage_out, variation):
+def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost, storage_out, variation):
     """
     Interpolate the values of the decision variables, costs and outputs
 
@@ -212,7 +216,7 @@ def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost,
     Reformat the boundary conditions, decision variables, outputs and
     costs
     """
-    if variation: 
+    if variation:
         cond_BC = [True if L<len(measurements_SubSys) else False for L in range(len(storage_DV[0]))]
         cond_DV = [False if L<len(measurements_SubSys) else True for L in range(len(storage_DV[0]))]
         cond_Out = [False if L<len(measurements_SubSys) else True for L in range(len(storage_out[0]))]
@@ -223,23 +227,20 @@ def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost,
         grid_measurements = measurements_SubSys[::-1]
         grid_point_values_costs = np.compress(cond_Costs,storage_cost, axis = 1)
         grid_point_values_out = np.compress(cond_Out,storage_out, axis = 1)
-    
+        """
         print("Grid points:")
         print(grid_points)
         print("values:")
         print(grid_point_values)
         print("measurements:")
         print(grid_measurements)
+        """
     
         """ Interpolation of reformatted data """
         try:
             commands = interpolate.griddata(grid_points, grid_point_values,grid_measurements ,method='linear')
             costs = interpolate.griddata(grid_points, grid_point_values_costs,grid_measurements ,method='linear')
             out = interpolate.griddata(grid_points, grid_point_values_out, grid_measurements ,method='linear')
-    
-            print("commands: " + str(commands))
-            print("costs: " + str(costs))
-            print("outputs: " + str(out))
     
             # Check if commands are in range, else set to boundary values
             for i, val in enumerate(commands):
@@ -262,11 +263,15 @@ def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost,
             out = []
     
             for i in range(0,len(storage_DV)):
-                commands.append(storage_DV[0,0])
-                costs.append(0)
-                out.append(0)
+                commands.append(storage_DV[0,2])
+                costs.append(storage_cost[0,2])
+                out.append(storage_out[0,2])
             print('interpolation failed!')
-            
+        """
+        print("commands: " + str(storage_DV))
+        print("costs: " + str(storage_cost))
+        print("outputs: " + str(storage_out))
+        """
     else:
         commands = []
         costs = []
@@ -276,5 +281,5 @@ def Interpolation(measurements_SubSys, storage_DV, bounds_DVs, storage_cost,
             commands.append(storage_DV[0,2])
             costs.append(storage_cost[0,2])
             out.append(storage_out[0,2])
-            
+        
     return [commands, costs, out]
