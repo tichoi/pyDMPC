@@ -121,7 +121,7 @@ def Obj(values_DVs, BC, s):
                 simStat = dymola.simulateExtendedModel(
                 problem=s._model_path,
                 startTime=Init.start_time,
-                stopTime=s.stop_time,
+                stopTime=s.pred_hor,
                 outputInterval=Init.incr,
                 method="Dassl",
                 tolerance=Init.tol,
@@ -132,7 +132,7 @@ def Obj(values_DVs, BC, s):
                 simStat = dymola.simulateExtendedModel(
                     problem=s._model_path,
                     startTime=Init.start_time,
-                    stopTime=s.stop_time,
+                    stopTime=s.pred_hor,
                     outputInterval=Init.incr,
                     method="Dassl",
                     tolerance=Init.tol,
@@ -214,7 +214,7 @@ def Obj(values_DVs, BC, s):
         #T_set = pickle.load(pickle_in)
 
         for tout in output_traj[0]:
-            cost_total += Init.cost_factor*(values_DVs - s.Q_set)**2 + Init.cost_factor*(tout - T_set)**2
+            cost_total += Init.cost_factor*values_DVs + Init.cost_factor*(tout - s.T_set)**2
             #cost_total += max(0.01,cost_par[k])*Init.cost_factor + 100*(max(abs(tout-273-Init.set_point[0])-Init.tolerance,0))**2
             k += 1
 
