@@ -106,8 +106,15 @@ class Subsystem():
 
             if time_step == Init.sync_rate:
                 if self.values_BCs is None:
-                    self.values_BCs = BExMoC.CalcBCvalues(Init.amount_vals_BCs, Init.exp_BCs, Init.center_vals_BCs, Init.factors_BCs, Init.amount_lower_vals, Init.amount_upper_vals)
-
+                    if self.variation:
+                        self.values_BCs = BExMoC.CalcBCvalues(
+                                Init.amount_vals_BCs, Init.exp_BCs, 
+                                Init.center_vals_BCs, Init.factors_BCs, 
+                                Init.amount_lower_vals, Init.amount_upper_vals)
+                    else:
+                        self.values_BCs = BExMoC.CalcBCvalues(
+                                Init.amount_vals_BCs, Init.exp_BCs, 
+                                Init.center_vals_BCs, Init.factors_BCs, 0, 0)
             # Check if optimization phase is due
             if time_step-time_storage < Init.optimization_interval and time_step != Init.sync_rate:
                 # Interpolation
