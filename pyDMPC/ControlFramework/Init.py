@@ -2,8 +2,8 @@
 
 """System configuration"""
 name_system = 'Geo'
-amount_consumer = 1
-amount_generator = 1
+amount_consumer = 2
+amount_generator = 0
 
 """Data point IDs in the controlled system"""
 measurements_IDs = ['fieldTemperature', 'buidlingTemperature','buildingNeed',
@@ -16,10 +16,10 @@ realtime = False         #Choose True for a real-life experiment
 
 """ Settings for BExMoC algorithm """
 # So far: For all subsystems the same settings
-factors_BCs = [1.5, 0.03]              # order: BC1, BC2, ...
-center_vals_BCs = [30, 0.001]
-amount_lower_vals = [9, 0]
-amount_upper_vals = [9, 1]
+factors_BCs = [6, 2]              # order: BC1, BC2, ...
+center_vals_BCs = [10, 15]
+amount_lower_vals = [0, 0]
+amount_upper_vals = [2, 1]
 exp_BCs = [1, 1]
 amount_vals_BCs = [1, 1]
 
@@ -129,21 +129,23 @@ pred_hor = []
 #Ground_long
 name.append('Field_long')
 position.append(1)
-type_subSyst.append('generator')
+type_subSyst.append('consumer')
 num_DecVars.append(1)
 num_VarsOut.append(2)
-bounds_DVs.append([0,100])
+bounds_DVs.append([0,0])
 model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Field_new')
 names_DVs.append('valveQflow')
 output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
-initial_names.append(["borFie.TExt0_start","borFie.m_flow_small"])
-IDs_initial_values.append(["vol.T_start","vol.m_flow_small"])
-IDs_inputs.append(["fieldTemperature_in","fieldMassflow_in"])   
-cost_par.append("")
+#initial_names.append(["borFie.TExt0_start","borFie.m_flow_small"])
+initial_names.append(None)
+#IDs_initial_values.append(["vol.T_start","vol.m_flow_small"])
+IDs_initial_values.append(None)
+IDs_inputs.append(["fieldMassflow_in","fieldTemperature_in"])   
+cost_par.append("decisionVariables.y[1]")
 T_set.append(285)
 Q_set.append(5200)
 variation.append(False)
-pred_hor.append(3*365*24*3600)
+pred_hor.append(24*3600) #3*365
 
 ## Ground_short
 #name.append('Field_short')
@@ -172,10 +174,12 @@ num_VarsOut.append(2)
 bounds_DVs.append([0,100])
 model_path.append('ModelicaModels.SubsystemModels.DetailedModels.Geo.Building')
 names_DVs.append('valveQflow')
-output_vars.append(["supplyTemperature.T"])
-initial_names.append(["variation.y[2]","variation.y[3]"])
-IDs_initial_values.append(["vol1.T_start","vol1.m_flow_small"])
-IDs_inputs.append(["buildingTemperature_in","buildingMassflow_in"])
+output_vars.append(["supplyTemperature.T","massFlow.m_flow"])
+#initial_names.append(["variation.y[2]","variation.y[3]"])
+#IDs_initial_values.append(["vol1.T_start","vol1.m_flow_small"])
+IDs_inputs.append(["buildingMassflow_in","buildingTemperature_in"])
+initial_names.append(None)
+IDs_initial_values.append(None)
 cost_par.append("decisionVariables.y[1]")
 T_set.append(295)
 Q_set.append(0)
