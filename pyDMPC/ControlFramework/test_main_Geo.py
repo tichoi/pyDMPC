@@ -53,6 +53,8 @@ def main():
         print('Opening successful ' + str(check1))
 
     dymola.cd(Init.path_res + '\\' + Init.name_wkdir)
+    
+    #dymola.ExecuteCommand("Advanced.CompileWith64=1")
 
     # Translate the model to FMU
     if Init.create_FMU:
@@ -68,7 +70,7 @@ def main():
     model.initialize()
     model.do_step(0, Init.sync_rate)
 
-    """Variables storing (tim☺e) steps"""
+    """Variables storing (time) steps"""
     time_step = Init.sync_rate
     time_storage = 0
     start = time.time()
@@ -155,10 +157,13 @@ def main():
             model.do_step(time_step, Init.sync_rate)
             print('Proceding')
 
-        if time_step-time_storage >= Init.optimization_interval:
-            time_storage = time_step
+        if time_step-time_storage >= s.opt_interv:
+            time_storage = s.opt_interv
         time_step += Init.sync_rate
         counter += 1
+
+        #pickle_in = open("C:\\mst\\dymola\\Geo_long\\T_out.pickle","rb")
+        #T_set = pickle.load(pickle_in)
 
     Objective_Function.CloseDymola()
 

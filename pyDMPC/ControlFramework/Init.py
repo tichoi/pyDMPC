@@ -75,7 +75,7 @@ start_time = 0.0
 stop_time = prediction_horizon
 
 # Increments of the equidistant output time grid
-incr = 10
+incr = 3600
 
 # Tolerance for the Modelica solver
 tol = 0.0001
@@ -124,6 +124,7 @@ T_set = []
 Q_set = []
 variation = []
 pred_hor = []
+opt_interv = []  # time until a long term field prediction is recalculated
 
 """ Subsystems """
 #Ground_long
@@ -146,6 +147,8 @@ T_set.append(285)
 Q_set.append(5200)
 variation.append(False)
 pred_hor.append(24*3600) #3*365
+opt_interv.append(3600*48)
+
 
 ## Ground_short
 #name.append('Field_short')
@@ -185,3 +188,4 @@ T_set.append(295)
 Q_set.append(0)
 variation.append(True)
 pred_hor.append(5*3600)
+opt_interv.append(3600)
