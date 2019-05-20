@@ -173,9 +173,9 @@ class Subsystem():
                 tz = pytz.timezone('Europe/Berlin')
                 ts = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
 
-                gl_commands_costs.append([np.array([[self.measurements[0]]]), np.array([[self.measurements[1]]]), commands, costs, np.array([[outputs[0][0]]]), np.array([[outputs[0][1]]]), self._name, ts])
+                #gl_commands_costs.append([np.array([[self.measurements[0]]]), np.array([[self.measurements[1]]]), commands, costs, np.array([[outputs[0][0]]]), np.array([[outputs[0][1]]]), self._name, ts])
 
-                sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'CommandsCosts.mat' ), {'CommandsCosts': gl_commands_costs})
+               # sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'CommandsCosts.mat' ), {'CommandsCosts': gl_commands_costs})
 
             return commands
 

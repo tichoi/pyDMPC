@@ -61,8 +61,8 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         Water,
     m_flow_small=1,
     m_flow_start=50,
-    inputType=AixLib.Fluid.Types.InputType.Constant,
-    m_flow_nominal=16)
+    m_flow_nominal=16,
+    addPowerToMedium=false)
     annotation (Placement(transformation(extent={{8,-44},{-12,-24}})));
   Modelica.Blocks.Sources.Pulse Q_flow_need_heat(
     width=50,
@@ -183,6 +183,8 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
     annotation (Placement(transformation(extent={{-4,-4},{4,4}},
         rotation=270,
         origin={-58,-82})));
+  Modelica.Blocks.Sources.Constant m_flow(k=16)
+    annotation (Placement(transformation(extent={{-68,20},{-58,30}})));
 equation
   connect(pulse1.y, Q_flow_need_cold.u1) annotation (Line(points={{-87.6,76},{
           -66,76},{-66,72.4},{-62.8,72.4}}, color={0,0,127}));
@@ -263,6 +265,8 @@ equation
           -68},{-58,-68},{-58,-77.2}}, color={0,0,127}));
   connect(hRCTemperatureC3.Celsius, fieldTemperature)
     annotation (Line(points={{-58,-86.4},{-58,-100}}, color={0,0,127}));
+  connect(m_flow.y, fan.m_flow_in) annotation (Line(points={{-57.5,25},{-30,25},
+          {-30,-14},{-2,-14},{-2,-22}}, color={0,0,127}));
  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{120,100}})),                                 Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,
