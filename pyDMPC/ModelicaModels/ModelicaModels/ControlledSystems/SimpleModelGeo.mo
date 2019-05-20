@@ -62,7 +62,7 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
     m_flow_small=1,
     m_flow_start=50,
     inputType=AixLib.Fluid.Types.InputType.Constant,
-    m_flow_nominal=25)
+    m_flow_nominal=16)
     annotation (Placement(transformation(extent={{8,-44},{-12,-24}})));
   Modelica.Blocks.Sources.Pulse Q_flow_need_heat(
     width=50,
@@ -114,7 +114,7 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         origin={30,-100})));
   AixLib.Fluid.Sensors.Temperature senTem(redeclare package Medium =
         Water)
-    annotation (Placement(transformation(extent={{-68,-88},{-58,-80}})));
+    annotation (Placement(transformation(extent={{-68,-72},{-58,-64}})));
   AixLib.Fluid.Sensors.Temperature senTem1(redeclare package Medium =
         Water)
     annotation (Placement(transformation(extent={{70,-26},{80,-16}})));
@@ -127,7 +127,7 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         origin={-14,100})));
   AixLib.Fluid.Sensors.Temperature senTem2(redeclare package Medium =
         Water)
-    annotation (Placement(transformation(extent={{-20,-88},{-10,-80}})));
+    annotation (Placement(transformation(extent={{-20,-70},{-10,-62}})));
   AixLib.Fluid.Sensors.Temperature senTem3(redeclare package Medium =
         Water)
     annotation (Placement(transformation(extent={{2,24},{12,34}})));
@@ -167,6 +167,22 @@ model SimpleModelGeo "extends Modelica.Icons.Example;extends ModelicaModels.Base
         origin={-23,43})));
   Modelica.Blocks.Sources.Constant const1(k=0)
     annotation (Placement(transformation(extent={{-68,42},{-58,52}})));
+  Modelica.Thermal.HeatTransfer.Celsius.FromKelvin hRCTemperatureC
+    annotation (Placement(transformation(extent={{-4,-4},{4,4}},
+        rotation=90,
+        origin={12,82})));
+  Modelica.Thermal.HeatTransfer.Celsius.FromKelvin hRCTemperatureC1
+    annotation (Placement(transformation(extent={{-4,-4},{4,4}},
+        rotation=270,
+        origin={84,-62})));
+  Modelica.Thermal.HeatTransfer.Celsius.FromKelvin hRCTemperatureC2
+    annotation (Placement(transformation(extent={{-4,-4},{4,4}},
+        rotation=270,
+        origin={-10,-80})));
+  Modelica.Thermal.HeatTransfer.Celsius.FromKelvin hRCTemperatureC3
+    annotation (Placement(transformation(extent={{-4,-4},{4,4}},
+        rotation=270,
+        origin={-58,-82})));
 equation
   connect(pulse1.y, Q_flow_need_cold.u1) annotation (Line(points={{-87.6,76},{
           -66,76},{-66,72.4},{-62.8,72.4}}, color={0,0,127}));
@@ -187,10 +203,6 @@ equation
           {-22,2}},                             color={0,127,255}));
   connect(fan.port_a, senMasFlo1.port_b)
     annotation (Line(points={{8,-34},{24,-34}}, color={0,127,255}));
-  connect(senTem.T, fieldTemperature) annotation (Line(points={{-59.5,-84},{-58,
-          -84},{-58,-100}},                     color={0,0,127}));
-  connect(senTem1.T, buildingTemperature) annotation (Line(points={{78.5,-21},{
-          84,-21},{84,-100}},   color={0,0,127}));
   connect(product.y, prescribedHeatFlow.Q_flow) annotation (Line(points={{-1.5,67},
           {16,67},{16,52},{54,52},{54,26}}, color={0,0,127}));
   connect(Q_flow_need.y, product.u2)
@@ -213,20 +225,16 @@ equation
     annotation (Line(points={{-26,-34},{-12,-34}}, color={0,127,255}));
   connect(vol.ports[1], senMasFlo3.port_b) annotation (Line(points={{-68,
           -8.66667},{-68,-34},{-38,-34}},color={0,127,255}));
-  connect(senTem2.port, fan.port_b) annotation (Line(points={{-15,-88},{-20,-88},
+  connect(senTem2.port, fan.port_b) annotation (Line(points={{-15,-70},{-20,-70},
           {-20,-34},{-12,-34}}, color={0,127,255}));
-  connect(senTem2.T, fieldTemperature_in) annotation (Line(points={{-11.5,-84},
-          {-10,-84},{-10,-100}}, color={0,0,127}));
-  connect(senTem3.T, buildingTemperature_in)
-    annotation (Line(points={{10.5,29},{12,29},{12,100}}, color={0,0,127}));
   connect(senMasFlo3.m_flow, fieldMassflow_in)
     annotation (Line(points={{-32,-40.6},{-32,-100}}, color={0,0,127}));
   connect(senMasFlo2.m_flow, buildingMassflow_in)
     annotation (Line(points={{28,8.6},{28,100}},  color={0,0,127}));
   connect(senTem3.port, senMasFlo2.port_a)
     annotation (Line(points={{7,24},{7,2},{22,2}},   color={0,127,255}));
-  connect(vol.ports[2], senTem.port) annotation (Line(points={{-68,-6},{-68,-88},
-          {-63,-88}},          color={0,127,255}));
+  connect(vol.ports[2], senTem.port) annotation (Line(points={{-68,-6},{-68,-72},
+          {-63,-72}},          color={0,127,255}));
   connect(Q_flow_need_cold.y, Q_flow_need.u[2]) annotation (Line(points={{-53.6,
           70},{-48,70},{-48,56},{-36.8,56},{-36.8,64.4}}, color={0,0,127}));
   connect(valveQflow, product.u1) annotation (Line(points={{-14,100},{-14,86},{
@@ -239,6 +247,22 @@ equation
           2},{-68,-3.33333}}, color={0,127,255}));
   connect(fixedTemperature.port, thermalResistor.port_a)
     annotation (Line(points={{-88,-80},{-88,-48}}, color={191,0,0}));
+  connect(senTem3.T, hRCTemperatureC.Kelvin)
+    annotation (Line(points={{10.5,29},{12,29},{12,77.2}}, color={0,0,127}));
+  connect(hRCTemperatureC.Celsius, buildingTemperature_in)
+    annotation (Line(points={{12,86.4},{12,100}}, color={0,0,127}));
+  connect(senTem1.T, hRCTemperatureC1.Kelvin) annotation (Line(points={{78.5,
+          -21},{84,-21},{84,-57.2}}, color={0,0,127}));
+  connect(hRCTemperatureC1.Celsius, buildingTemperature)
+    annotation (Line(points={{84,-66.4},{84,-100}}, color={0,0,127}));
+  connect(senTem2.T, hRCTemperatureC2.Kelvin) annotation (Line(points={{-11.5,
+          -66},{-10,-66},{-10,-75.2}}, color={0,0,127}));
+  connect(hRCTemperatureC2.Celsius, fieldTemperature_in)
+    annotation (Line(points={{-10,-84.4},{-10,-100}}, color={0,0,127}));
+  connect(senTem.T, hRCTemperatureC3.Kelvin) annotation (Line(points={{-59.5,
+          -68},{-58,-68},{-58,-77.2}}, color={0,0,127}));
+  connect(hRCTemperatureC3.Celsius, fieldTemperature)
+    annotation (Line(points={{-58,-86.4},{-58,-100}}, color={0,0,127}));
  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{120,100}})),                                 Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,
