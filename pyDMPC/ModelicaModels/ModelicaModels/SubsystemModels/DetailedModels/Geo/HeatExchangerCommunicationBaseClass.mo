@@ -9,8 +9,8 @@ model HeatExchangerCommunicationBaseClass
     redeclare package Medium = MediumWater,
     T=30 + 273.15,
     use_T_in=true,
-    use_m_flow_in=true,
-    use_X_in=false)
+    use_X_in=false,
+    use_m_flow_in=false)
     annotation (Placement(transformation(extent={{-120,2},{-100,22}})));
   Modelica.Fluid.Sources.Boundary_pT IntakeAirSink(
     redeclare package Medium = MediumWater,
@@ -91,8 +91,6 @@ equation
     annotation (Line(points={{111,48},{174,48},{174,48}}, color={0,0,127}));
   connect(MeasuredData.y[2], convertPercent.u) annotation (Line(points={{-204.3,
           203},{-100,203},{-100,175.2}}, color={0,0,127}));
-  connect(variation.y[2], IntakeAirSource.m_flow_in) annotation (Line(points={{-219,
-          140},{-170,140},{-170,20},{-120,20}}, color={0,0,127}));
   connect(massFlow.port_b, IntakeAirSink.ports[1])
     annotation (Line(points={{128,12},{170,12}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-240,-200},

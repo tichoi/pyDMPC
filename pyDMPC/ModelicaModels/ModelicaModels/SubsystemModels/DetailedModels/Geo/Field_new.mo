@@ -63,7 +63,7 @@ model Field_new "Simplified model of geothermal field"
     energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
     m_flow_small=50,
     p_start=100000,
-    nPorts=2)                    annotation (
+    nPorts=3)                    annotation (
       Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -89,7 +89,7 @@ model Field_new "Simplified model of geothermal field"
         rotation=180,
         origin={48,30})));
   Modelica.Blocks.Math.Product product1
-    annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
+    annotation (Placement(transformation(extent={{-80,0},{-60,20}})));
   Modelica.Blocks.Sources.Constant massFlowSet(k=16) "Mass flow set point"
     annotation (Placement(transformation(extent={{20,60},{40,80}})));
   Modelica.Fluid.Sources.Boundary_pT pressurePoint(
@@ -103,41 +103,58 @@ model Field_new "Simplified model of geothermal field"
         rotation=270,
         origin={42,-34})));
   AixLib.Fluid.Sensors.Temperature supplyTemperature(T(start=285), redeclare
-      package Medium = Water)
-                     "Temperature of supply water"
+      package Medium = Water) "Temperature of supply water"
     annotation (Placement(transformation(extent={{82,34},{102,54}})));
   AixLib.Fluid.Sensors.MassFlowRate massFlow(redeclare package Medium =
         Water)
     annotation (Placement(transformation(extent={{6,-6},{-6,6}},
         rotation=270,
         origin={80,12})));
+  Modelica.Blocks.Logical.GreaterEqualThreshold greaterEqualThreshold
+    annotation (Placement(transformation(extent={{-60,70},{-40,90}})));
+  Modelica.Blocks.Logical.Switch switch1
+    annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
+  AixLib.Fluid.Sensors.Temperature returnTemperature(redeclare package Medium
+      = Water, T(start=285.15)) "Temperature of supply water"
+    annotation (Placement(transformation(extent={{74,-78},{94,-58}})));
 equation
   connect(prescribedHeatFlow.port, vol1.heatPort)
     annotation (Line(points={{-24,40},{-8,40}}, color={191,0,0}));
   connect(borFie.port_b, pump.port_a)
     annotation (Line(points={{32,0},{48,0}}, color={0,127,255}));
   connect(res.port_b, vol1.ports[1])
-    annotation (Line(points={{38,30},{0,30}}, color={0,127,255}));
-  connect(vol1.ports[2], borFie.port_a) annotation (Line(points={{4,30},{-40,30},
+    annotation (Line(points={{38,30},{-0.666667,30}},
+                                              color={0,127,255}));
+  connect(vol1.ports[2], borFie.port_a) annotation (Line(points={{2,30},{-40,30},
           {-40,0},{-22,0}}, color={0,127,255}));
   connect(decisionVariables.y[1], percent.u)
     annotation (Line(points={{-79,-50},{-71.2,-50}}, color={0,0,127}));
-  connect(prescribedHeatFlow.Q_flow, product1.y)
-    annotation (Line(points={{-48,40},{-59,40}}, color={0,0,127}));
   connect(percent.y, product1.u2) annotation (Line(points={{-57.4,-50},{-48,-50},
-          {-48,-8},{-94,-8},{-94,34},{-82,34}}, color={0,0,127}));
+          {-48,-8},{-94,-8},{-94,4},{-82,4}},   color={0,0,127}));
   connect(massFlowSet.y, pump.m_flow_in) annotation (Line(points={{41,70},{72,70},
           {72,20},{58,20},{58,12}}, color={0,0,127}));
   connect(pressurePoint.ports[1], pump.port_a)
     annotation (Line(points={{42,-24},{42,0},{48,0}}, color={0,127,255}));
   connect(variation.y[1], product1.u1) annotation (Line(points={{-79,90},{-72,
-          90},{-72,70},{-96,70},{-96,46},{-82,46}}, color={0,0,127}));
+          90},{-72,70},{-96,70},{-96,16},{-82,16}}, color={0,0,127}));
   connect(pump.port_b, massFlow.port_a)
     annotation (Line(points={{68,0},{80,0},{80,6}}, color={0,127,255}));
   connect(massFlow.port_b, res.port_a)
     annotation (Line(points={{80,18},{80,30},{58,30}}, color={0,127,255}));
   connect(supplyTemperature.port, pump.port_b)
     annotation (Line(points={{92,34},{92,0},{68,0}}, color={0,127,255}));
+  connect(variation.y[1], greaterEqualThreshold.u) annotation (Line(points={{
+          -79,90},{-66,90},{-66,80},{-62,80}}, color={0,0,127}));
+  connect(prescribedHeatFlow.Q_flow, switch1.y)
+    annotation (Line(points={{-48,40},{-59,40}}, color={0,0,127}));
+  connect(variation.y[1], switch1.u3) annotation (Line(points={{-79,90},{-72,90},
+          {-72,70},{-96,70},{-96,32},{-82,32}}, color={0,0,127}));
+  connect(product1.y, switch1.u1) annotation (Line(points={{-59,10},{-52,10},{
+          -52,26},{-90,26},{-90,48},{-82,48}}, color={0,0,127}));
+  connect(greaterEqualThreshold.y, switch1.u2) annotation (Line(points={{-39,80},
+          {-14,80},{-14,60},{-92,60},{-92,40},{-82,40}}, color={255,0,255}));
+  connect(vol1.ports[3], returnTemperature.port) annotation (Line(points={{
+          4.66667,30},{-40,30},{-40,-90},{84,-90},{84,-78}}, color={0,127,255}));
   annotation (experiment(StopTime=94608000, Interval=86400),
       __Dymola_experimentSetupOutput);
 end Field_new;

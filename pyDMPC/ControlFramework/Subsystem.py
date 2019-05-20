@@ -83,7 +83,7 @@ class Subsystem():
 
         # Save new 'CompleteInput.mat' File
         sio.savemat((Init.path_res +'\\'+Init.name_wkdir + '\\' + self._name + '\\' + 'CompleteInput.mat'), {'InputTable' :np.array(values)})
-        self.measurements[0] = self.CalcXfromRH(self.measurements[0]*100, self.measurements[1])
+        #self.measurements[0] = self.CalcXfromRH(self.measurements[0]*100, self.measurements[1])
         self.measurements = [self.measurements[0], self.measurements[1]]
 
         # Get a dedicated outdoor measurement

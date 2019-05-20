@@ -181,6 +181,11 @@ def Obj(values_DVs, BC, s):
             output_traj.append(sim[val].values())
         global gl_output
         gl_output = output_list
+        
+    if s._name == "Building":
+        sim = SimRes(Init.path_res + "\\" + Init.name_wkdir + r"\Field_long\dsres.mat")
+        results = sim["returnTemperature.T"].values()
+        T_set = results[2]
 
     """all other subsystems + costs of downstream system"""
     k = 0
@@ -213,15 +218,15 @@ def Obj(values_DVs, BC, s):
         #pickle_in = open("C:\\mst\\dymola\\Geo_long\\T_out.pickle","rb")
         #T_set = pickle.load(pickle_in)
 
-        for tout in output_traj[0]:
-            cost_total += Init.cost_factor*values_DVs + Init.cost_factor*(tout - s.T_set)**2
-            #cost_total += max(0.01,cost_par[k])*Init.cost_factor + 100*(max(abs(tout-273-Init.set_point[0])-Init.tolerance,0))**2
-            k += 1
+        if s._name == "Building":
+            cost_total = (output_list[0]-T_set)**2
+        else: 
+            cost_total += (output_list[0] - s.T_set)**2
 
         cost_total = cost_total/len(output_traj[0])
         print(s._name + " actuators : " + str(values_DVs))
         print("cost_total: " + str(cost_total))
-        print("output: " + str(tout))
+        #print("output: " + str(tout))
 
     '''Temporary objective function value'''
     obj_fnc_vals = [1]
