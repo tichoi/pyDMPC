@@ -3,26 +3,6 @@ model Field_new "Simplified model of geothermal field"
 
   replaceable package Water = AixLib.Media.Water;
 
-  AixLib.Fluid.Geothermal.Borefields.TwoUTubes borFie(redeclare package Medium =
-        Water,
-    borFieDat(
-      filDat=AixLib.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(),
-      soiDat=AixLib.Fluid.Geothermal.Borefields.Data.Soil.SandStone(),
-      conDat=AixLib.Fluid.Geothermal.Borefields.Data.Configuration.Example(
-          borCon=AixLib.Fluid.Geothermal.Borefields.Types.BoreholeConfiguration.DoubleUTubeParallel,
-          cooBor=[0,0; 0,6; 6,0; 6,6; 0,12; 12,0; 12,12; 0,18; 18,0; 18,18; 6,
-          12; 6,18; 12,6; 18,6; 18,12; 12,18; 24,0; 0,24; 6,24; 12,24; 18,24;
-          24,24; 24,18; 24,12; 24,6; 0,30; 6,30; 12,30; 18,30; 24,30; 30,30; 30,
-          24; 30,18; 30,12; 30,6; 30,0; 0,36; 6,36; 12,36; 18,36; 24,36; 30,36;
-          36,36; 36,30; 36,24; 36,18; 36,12; 36,6; 36,0])),
-    show_T=false,
-    TExt0_start=285.15)
-               annotation (Placement(
-        transformation(
-        extent={{-27,-26},{27,26}},
-        rotation=0,
-        origin={5,0})));
-
   Modelica.Blocks.Sources.CombiTimeTable decisionVariables(
     table=[0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,0.0,0.0; 0.0,
         0.0,0.0],
@@ -58,12 +38,12 @@ model Field_new "Simplified model of geothermal field"
         origin={-90,90})));
   AixLib.Fluid.MixingVolumes.MixingVolume vol1(
     redeclare package Medium = Water,
-    m_flow_nominal=100,
-    V=200,
     energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
     m_flow_small=50,
+    nPorts=3,
     p_start=100000,
-    nPorts=3)                    annotation (
+    m_flow_nominal=16,
+    V=2)                         annotation (
       Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -71,7 +51,7 @@ model Field_new "Simplified model of geothermal field"
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow prescribedHeatFlow
     annotation (Placement(transformation(extent={{-12,-12},{12,12}},
         rotation=0,
-        origin={-36,40})));
+        origin={-24,40})));
   Modelica.Blocks.Math.Gain percent(k=0.01) "Convert from percent" annotation (
       Placement(transformation(
         extent={{-6,-6},{6,6}},
@@ -110,23 +90,46 @@ model Field_new "Simplified model of geothermal field"
     annotation (Placement(transformation(extent={{6,-6},{-6,6}},
         rotation=270,
         origin={80,12})));
-  Modelica.Blocks.Logical.GreaterEqualThreshold greaterEqualThreshold
+  Modelica.Blocks.Logical.LessEqualThreshold    lessEqualThreshold
     annotation (Placement(transformation(extent={{-60,70},{-40,90}})));
   Modelica.Blocks.Logical.Switch switch1
     annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
-  AixLib.Fluid.Sensors.Temperature returnTemperature(redeclare package Medium
-      = Water, T(start=285.15)) "Temperature of supply water"
+  AixLib.Fluid.Sensors.Temperature returnTemperature(redeclare package Medium =
+        Water, T(start=285.15)) "Temperature of supply water"
     annotation (Placement(transformation(extent={{74,-78},{94,-58}})));
+  AixLib.Fluid.MixingVolumes.MixingVolume vol(
+    redeclare package Medium = Water,
+    m_flow_small=50,
+    nPorts=2,
+    V=9000,
+    p_start=150000,
+    T_start=285.15,
+    m_flow_nominal=16)              annotation (
+      Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=0,
+        origin={-8,-2})));
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature fixedTemperature(T=285.15)
+    annotation (Placement(transformation(
+        extent={{-6,-6},{6,6}},
+        rotation=90,
+        origin={-24,-62})));
+  Modelica.Thermal.HeatTransfer.Components.ThermalConductor thermalConductor(G=50)
+    annotation (Placement(transformation(
+        extent={{-6,-6},{6,6}},
+        rotation=90,
+        origin={-24,-34})));
+  Modelica.Blocks.Math.Gain negate(k=-1) "negate" annotation (Placement(
+        transformation(
+        extent={{-6,-6},{6,6}},
+        rotation=0,
+        origin={-48,40})));
 equation
   connect(prescribedHeatFlow.port, vol1.heatPort)
-    annotation (Line(points={{-24,40},{-8,40}}, color={191,0,0}));
-  connect(borFie.port_b, pump.port_a)
-    annotation (Line(points={{32,0},{48,0}}, color={0,127,255}));
+    annotation (Line(points={{-12,40},{-8,40}}, color={191,0,0}));
   connect(res.port_b, vol1.ports[1])
     annotation (Line(points={{38,30},{-0.666667,30}},
                                               color={0,127,255}));
-  connect(vol1.ports[2], borFie.port_a) annotation (Line(points={{2,30},{-40,30},
-          {-40,0},{-22,0}}, color={0,127,255}));
   connect(decisionVariables.y[1], percent.u)
     annotation (Line(points={{-79,-50},{-71.2,-50}}, color={0,0,127}));
   connect(percent.y, product1.u2) annotation (Line(points={{-57.4,-50},{-48,-50},
@@ -143,18 +146,28 @@ equation
     annotation (Line(points={{80,18},{80,30},{58,30}}, color={0,127,255}));
   connect(supplyTemperature.port, pump.port_b)
     annotation (Line(points={{92,34},{92,0},{68,0}}, color={0,127,255}));
-  connect(variation.y[1], greaterEqualThreshold.u) annotation (Line(points={{
-          -79,90},{-66,90},{-66,80},{-62,80}}, color={0,0,127}));
-  connect(prescribedHeatFlow.Q_flow, switch1.y)
-    annotation (Line(points={{-48,40},{-59,40}}, color={0,0,127}));
+  connect(variation.y[1], lessEqualThreshold.u) annotation (Line(points={{-79,
+          90},{-66,90},{-66,80},{-62,80}}, color={0,0,127}));
   connect(variation.y[1], switch1.u3) annotation (Line(points={{-79,90},{-72,90},
           {-72,70},{-96,70},{-96,32},{-82,32}}, color={0,0,127}));
   connect(product1.y, switch1.u1) annotation (Line(points={{-59,10},{-52,10},{
           -52,26},{-90,26},{-90,48},{-82,48}}, color={0,0,127}));
-  connect(greaterEqualThreshold.y, switch1.u2) annotation (Line(points={{-39,80},
-          {-14,80},{-14,60},{-92,60},{-92,40},{-82,40}}, color={255,0,255}));
+  connect(lessEqualThreshold.y, switch1.u2) annotation (Line(points={{-39,80},{
+          -14,80},{-14,60},{-92,60},{-92,40},{-82,40}}, color={255,0,255}));
+  connect(thermalConductor.port_b, vol.heatPort)
+    annotation (Line(points={{-24,-28},{-24,-2},{-18,-2}}, color={191,0,0}));
+  connect(fixedTemperature.port, thermalConductor.port_a)
+    annotation (Line(points={{-24,-56},{-24,-40}}, color={191,0,0}));
+  connect(vol.ports[1], pump.port_a) annotation (Line(points={{-10,-12},{20,-12},
+          {20,0},{48,0}}, color={0,127,255}));
+  connect(vol1.ports[2], vol.ports[2]) annotation (Line(points={{2,30},{-40,30},
+          {-40,-12},{-6,-12}}, color={0,127,255}));
   connect(vol1.ports[3], returnTemperature.port) annotation (Line(points={{
-          4.66667,30},{-40,30},{-40,-90},{84,-90},{84,-78}}, color={0,127,255}));
+          4.66667,30},{-40,30},{-40,-80},{84,-80},{84,-78}}, color={0,127,255}));
+  connect(prescribedHeatFlow.Q_flow, negate.y)
+    annotation (Line(points={{-36,40},{-41.4,40}}, color={0,0,127}));
+  connect(negate.u, switch1.y)
+    annotation (Line(points={{-55.2,40},{-59,40}}, color={0,0,127}));
   annotation (experiment(StopTime=94608000, Interval=86400),
       __Dymola_experimentSetupOutput);
 end Field_new;
