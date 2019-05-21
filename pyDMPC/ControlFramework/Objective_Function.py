@@ -219,7 +219,8 @@ def Obj(values_DVs, BC, s):
         #T_set = pickle.load(pickle_in)
 
         if s._name == "Building":
-            cost_total = (output_list[0]-T_set)**2
+            cost_total = (output_list[0]-T_set)**2 + 0.1*(100-values_DVs)
+            print(T_set)
         else: 
             cost_total += (output_list[0] - s.T_set)**2
 
