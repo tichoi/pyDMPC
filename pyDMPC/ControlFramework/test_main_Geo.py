@@ -72,7 +72,7 @@ def main():
 
     """Variables storing (time) steps"""
     time_step = Init.sync_rate
-    time_storage = 0
+    time_storage = np.zeros(Init.amount_consumer+Init.amount_generator)
     start = time.time()
     counter = 0
 
@@ -85,12 +85,11 @@ def main():
     2. NC-OPT algorithm using parallel computing
     3. BExMoC algorithm
     """
+    # Variable for the final commands of all subsystems
+    command_all = np.zeros(Init.amount_consumer+Init.amount_generator)
 
     """The algorithms work with a discrete *time_step*. In each step, the current measurements are taken using the :func:`GetMeasurements' method. """
     while time_step <= Init.sync_rate*Init.stop_time:
-
-        # Variable for the final commands of all subsystems
-        command_all = []
 
         if Init.algorithm == 'NC_DMPC':
 
@@ -100,7 +99,7 @@ def main():
                 for k in range(4):
                     if Init.parallelization:
                         def f(s):
-                            commands = s.CalcDVvalues(time_step, time_storage,k,model)
+                            commands = s.CalcDVvalues(time_step, time_storage[0],k,model)
                             return commands
 
                         p = Pool(4)
@@ -108,38 +107,42 @@ def main():
                         command_all = commands
 
                     else:
-                        for s in subsystems:
-                            commands = s.CalcDVvalues(time_step, time_storage,k,model)
+                        for j,s in enumeratre(subsystems):
+                            commands = s.CalcDVvalues(time_step, time_storage[j],k,model)
                             print(k, s._name, commands)
-                            command_all.append(commands)
+                            command_all[j] = commands
 
         elif Init.algorithm == 'BExMoC':
 
             #Consider each subsystem sequentially
-            for s in subsystems:
+            for j,s in enumerate(subsystems):
                 print(s._name)
+                
+                if time_step-time_storage[j] >= s.opt_interv or time_step == Init.sync_rate:
 
-                """The main calculations are carried out by invoking the :func:'CalcDVvalues' method. The BExMoC algorithm exchanges tables between the subsystems in a .mat format"""
-                commands = (s.CalcDVvalues(time_step, time_storage,0, model))
-
-                command_all.append(commands)
-
-                #Save the look-up tables in .mat files
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'DV_lookUpTable' + str(counter) + '.mat' ),
-                {'DV_lookUpTable': s.lookUpTables[1]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'Costs_lookUpTable' + str(counter) + '.mat' ),
-                {'Cost_lookUpTable': s.lookUpTables[0]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'Output_Table' + str(counter) + '.mat' ),
-                {'Output_Table': s.lookUpTables[2]}))
-
-                (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
-                'command' + str(counter) + '.mat' ),
-                {'Output_Table': commands}))
+                    """The main calculations are carried out by invoking the :func:'CalcDVvalues' method. The BExMoC algorithm exchanges tables between the subsystems in a .mat format"""
+                    commands = (s.CalcDVvalues(time_step, time_storage[j],0, model))
+    
+                    command_all[j] = commands[0]
+    
+                    #Save the look-up tables in .mat files
+                    (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
+                    'DV_lookUpTable' + str(counter) + '.mat' ),
+                    {'DV_lookUpTable': s.lookUpTables[1]}))
+    
+                    (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
+                    'Costs_lookUpTable' + str(counter) + '.mat' ),
+                    {'Cost_lookUpTable': s.lookUpTables[0]}))
+    
+                    (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
+                    'Output_Table' + str(counter) + '.mat' ),
+                    {'Output_Table': s.lookUpTables[2]}))
+    
+                    (sio.savemat((Init.path_res + '\\' + Init.name_wkdir + '\\' + s._name + '\\' +
+                    'command' + str(counter) + '.mat' ),
+                    {'Output_Table': commands}))
+    
+                    time_storage[j] = s.opt_interv
 
         #For real time experiments, the excecution needs to be paused
         if Init.realtime:
@@ -157,8 +160,6 @@ def main():
             model.do_step(time_step, Init.sync_rate)
             print('Proceding')
 
-        if time_step-time_storage >= s.opt_interv:
-            time_storage = s.opt_interv
         time_step += Init.sync_rate
         counter += 1
 
